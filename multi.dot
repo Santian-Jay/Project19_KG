@@ -1,0 +1,6 @@
+graph  {
+A;
+B;
+A -- B  [key=0, label=foo];
+A -- B  [key=1, label=bar];
+}

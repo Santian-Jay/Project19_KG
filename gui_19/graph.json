@@ -1,0 +1,11 @@
+[{
+  "n_entity": 0,
+  "n_relation": 0,
+  "n_edge": 0,
+  "n_n": 0, "n_1": 0,
+  "1_1": 0, "1_n": 0,
+  "inverse": 0,
+  "symmetric": 0,
+  "in_degree": 0,
+  "out_degree": 0
+}]
