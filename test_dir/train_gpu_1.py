@@ -65,7 +65,7 @@ total_test_step = 0
 epoch = 10
 
 #添加tensorboard
-writer = SummaryWriter("../logs_train")
+writer = SummaryWriter("../../logs_train")
 start_time = time.time()
 for i in range(epoch):
     print("---------第{}轮训练开始---------".format(i+1))

@@ -1,12 +1,12 @@
 # open file
-f = open('subgraph_v1/entity2id.txt', 'r')
+f = open('../subgraph_v1/entity2id.txt', 'r')
 
 # 读取全部内容
 # data = f.read()
 # print(data)   #end=''不打印换行空格，print(data, end='')
 
 
-f = open('subgraph_v1/entity2id.txt', 'r')  # open file
+f = open('../subgraph_v1/entity2id.txt', 'r')  # open file
 
 all_data = f.readlines()  # read data line by line
 

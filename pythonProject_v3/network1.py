@@ -1,8 +1,10 @@
 import glob
+import io
 
 import networkx as nx
 from matplotlib import pyplot as plt
 import tkinter as tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from PIL import ImageTk, Image
 from tkinter import Scrollbar, Text, Tk
 from tkinter.constants import (HORIZONTAL, VERTICAL, RIGHT, LEFT, X, Y, BOTH, BOTTOM, YES, END)
@@ -129,7 +131,7 @@ def draw_main(G):
     # plt.show()  #不显示大图
 
 
-def draw_sub(sub, index):
+def draw_sub(sub, index, frame, subgraphs_rendered):
     old_attrs = nx.get_edge_attributes(sub, 'weight')
     attrs = {}
     for k, v in old_attrs.items():
@@ -138,25 +140,48 @@ def draw_sub(sub, index):
     for key, value in attrs.items():
         attrs[key] = replace_relate(value)
     pos = nx.circular_layout(sub)
+
+    # f = plt.figure(figsize=(5, 5), dpi=80)
+    # a = f.add_subplot(111)
     # node
     plt.figure(dpi=80, figsize=(12, 8))
+    f = plt.figure(figsize=(5, 5), dpi=100)
     nx.draw_networkx_nodes(sub, pos, node_size=400, node_color='#6495ED')
     label_options = {"ec": "k", "fc": "white", "alpha": 0.5}
     nx.draw_networkx_labels(sub, pos, font_size=8, bbox=label_options)
     # edge
     nx.draw_networkx_edges(sub, pos)
-
     nx.draw_networkx_edge_labels(sub, pos, edge_labels=attrs)
     plt.axis('off')
-    save_path = 'subgraph_images/pic-{}.png'.format(index + 1)
-    plt.savefig(save_path)
+    # canvas = FigureCanvasTkAgg(f, master=frame)
+    # canvas.draw()
+    # canvas.get_tk_widget().pack(side=tk.TOP, fill='both', expand=1)
+    # buffer = io.BytesIO()
+    # plt.savefig(buffer, format='PNG')
+    # img0 = Image.open(io.BytesIO(buffer.getvalue()))
+    # img1 = img0.resize((800, 800))
+    # buffer.close()
+    # save_path = 'subgraph_images/pic-{}.png'.format(index + 1)
+    # plt.savefig(save_path)
     # plt.close()
     # plt.axis('off')
 
     # plt.show()
 
+    sg_row = int(index / 2)
+    sg_col = int(index % 2)
+    print(f'row: {sg_row}')
+    print(f'col: {sg_col}')
+    frame2 = tk.Frame(frame)
+    frame2.columnconfigure(0, weight=1)
+    frame2.columnconfigure(1, weight=1)
+    canvas = FigureCanvasTkAgg(f, master=frame2)
+    canvas.draw()
+    canvas.get_tk_widget().grid(row=sg_row, column=sg_col, sticky=tk.EW)  # .pack(side=tkinter.TOP)  # , fill=tkinter.BOTH, expand=1
+    frame2.grid(row=sg_row, column=sg_col, sticky=tk.EW)
 
-def get_muticenter(graph, centers, max_graph_num, relation, max_entities):
+
+def get_muticenter(graph, centers, max_graph_num, relation, max_entities, frame, subgraphs_rendered):
     centers_graphs = []
     routes = [[]]
     for i in range(len(centers)):
@@ -181,12 +206,12 @@ def get_muticenter(graph, centers, max_graph_num, relation, max_entities):
 
     for i in range(len(centers_graphs)):
         res = breadFirstGraphExtract(graph, centers_graphs[i], relation, 5, max_entities)  # 这里可以改成deapfirst， 5是最大深度，15是最大节点数
-        draw_sub(centers_graphs[i], i)
+        draw_sub(centers_graphs[i], i, frame, subgraphs_rendered)
         # draw_sub(res)
 
 
 # if __name__ == '__main__':
-def first_func(entities, relation, n_entities, f_entity, f_relation, f_train):
+def first_func(entities, relation, n_entities, f_entity, f_relation, f_train, frame, subgraphs_rendered):
     global entity, relate, train, max_entity
     entity = f_entity
     relate = f_relation
@@ -197,7 +222,7 @@ def first_func(entities, relation, n_entities, f_entity, f_relation, f_train):
     draw_main(G)
 
     max_num = 5  # 最多的子图数
-    get_muticenter(G, entities, max_num, relation, max_entity)
+    get_muticenter(G, entities, max_num, relation, max_entity, frame, subgraphs_rendered)
     # get_muticenter(G, ['Tove', 'SweynForkbeard', 'Harthacnut'], max_num)
     # centers = get_muticenter(G, ['Tove', 'SweynForkbeard', 'Harthacnut'], max_num)  # 3个中心节点
     # centers = get_muticenter(G, ['Gyrid', 'Tove'], max_num)  # 3个中心节点

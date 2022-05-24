@@ -1,6 +1,6 @@
 import os
 
-root_dir = "dataset/train"   #设置根路径
+root_dir = "../dataset/train"  #设置根路径
 target_dir = "ants"          #目标文档
 double_dir = ["ants", "bees"]
 out_dir_double = ["ants_label", "bees_label"]

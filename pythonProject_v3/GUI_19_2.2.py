@@ -1,6 +1,13 @@
+import io
 import shutil
 import tkinter as tk
+import networkx as nx
 import tkinter.font as tkFont
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import time
 from tkinter import *
 from tkinter import ttk, messagebox
 from tkinter import filedialog
@@ -18,6 +25,7 @@ import network1
 import json
 from PIL import ImageTk, Image
 from tkinter.constants import (HORIZONTAL, VERTICAL, RIGHT, LEFT, X, Y, BOTH, BOTTOM, YES, END)
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 # ====================================global variables==============================================
 data_folder_path = f"{os.getcwd()}\dataset"
@@ -28,6 +36,9 @@ dbname = "kit301"
 new_entity, new_relation, new_train, feature_1, feature_2, weight, train_1, train_node = [], [], [], [], [], [], [], []
 fact_string_list = []
 subgraphs_rendered = 0
+img_out, img_in,img_out_d, img_out_dd, img0, img1 = None, None, None, None, None, None
+# txt = Text()
+images = None
 
 
 # ====================================global functions==============================================
@@ -43,7 +54,8 @@ def get_statistics(statsFrame):
     n_11, n_1n, n_n1, n_nn = nnrelation.nn_categorization(new_train)
 
     # data list
-    data_list = [t_nodes, t_edges, in_degree_ave, out_degree_ave, len(new_relation), n_11, n_1n, n_n1, n_nn, symme.n_sy, inver.n_inver, n_relation_head, n_relation_tail]
+    data_list = [t_nodes, t_edges, in_degree_ave, out_degree_ave, len(new_relation), n_11, n_1n, n_n1, n_nn, symme.n_sy,
+                 inver.n_inver, n_relation_head, n_relation_tail]
     # insert data to json
     with open('data.json', 'r+') as f:
         json_data = json.load(f)
@@ -204,6 +216,7 @@ def statistics_window():
     s.configure('Treeview', rowheight=40)
     s.configure('Treeview.Heading', font=f2)
     cate_text_view = Text()
+    img_in, img_out, img_out_d, img_out_d, img0, img1 = None, None, None, None, None, None
 
     FilesButton = tk.Button(statistics_window, text="Select files", font=f1,
                             command=lambda: [statistics_window.destroy(), select_files_window_b()])
@@ -250,11 +263,15 @@ def statistics_window():
     distributionFrame = Frame(statistics_window, highlightbackground="black", highlightthickness=2, bg="#f7f3f2")
     distributionFrame.place(x=822, y=150, width=1000, height=500)
 
+    # dis_frame1 = tk.Frame(distributionFrame, width=500)
+    # dis_frame1.pack(side='left', fill='y', expand=True)
+    # dis_frame2 = tk.Frame(distributionFrame, width=500)
+    # dis_frame2.pack(side='left', fill='y', expand=True)
+
     # nnLabel = tk.Label(factsFrame, wraplength=400, text='n-n==========================================', font='Arial', pady=10)
     # nnLabel.pack()
 
     # category view
-
 
     def show_category1():
         global cate_text_view
@@ -373,15 +390,71 @@ def statistics_window():
                     jd['value']
                 ))
 
-    # distribution graph view
-    def create_dis_image_view():
-        mb1 = tk.Menubutton(distributionFrame, text='Show Distribution Graph', relief='raised', font=f1, width=120)
-        mb1.pack(anchor=tk.NW)
+    def draw_dis(graph):
+        global img_in, img_out
+        As_1 = nx.adjacency_matrix(graph, weight=None)  # Ignore weights when converting to matrix 'weight=None'
+        A_1 = As_1.todense()
+        new_arr = np.array(A_1)  # covert matrix to array
 
-        dis_frame1 = tk.Frame(distributionFrame, bg='red', width=500)
-        dis_frame1.pack(side='left', fill='y', expand=True)
-        dis_frame2 = tk.Frame(distributionFrame, bg='blue', width=500)
-        dis_frame2.pack(side='left', fill='y', expand=True)
+        outd = np.sum(new_arr, axis=1)
+        out_data = pd.DataFrame({'outdegree': outd})
+        sns.kdeplot(data=out_data)
+        buffer1 = io.BytesIO()
+        plt.savefig(buffer1, format='PNG')
+        img0 = Image.open(io.BytesIO(buffer1.getvalue()))
+        img1 = img0.resize((500, 500))
+        img_in = ImageTk.PhotoImage(img1)
+        # save_path1 = 'dis_images/out-d.jpg'
+        # plt.savefig(save_path1)
+        plt.close()
+
+        ind = np.sum(new_arr, axis=0)
+        in_data = pd.DataFrame({'indegree': ind})
+        sns.kdeplot(data=in_data)
+        buffer2 = io.BytesIO()
+        plt.savefig(buffer2, format='PNG')
+        img2 = Image.open(io.BytesIO(buffer2.getvalue()))
+        img4 = img2.resize((500, 500))
+        img_out = ImageTk.PhotoImage(img4)
+
+        # save_path2 = 'dis_images/in-d.jpg'
+        # plt.savefig(save_path2)
+        plt.close()
+
+    def show_dis_graph():
+        # dis_frame1.pack(side='left', fill='both', expand=True)
+        # dis_frame2.pack(side='left', fill='both', expand=True)
+        #
+        # out_data = pd.DataFrame({'outdegree': outd})
+        # sns.kdeplot(data=out_data)
+        # buffer1 = io.BytesIO()
+        # plt.savefig(buffer1, format='PNG')
+        # img0 = Image.open(io.BytesIO(buffer1.getvalue()))
+        # img1 = img0.resize((500, 500))
+        # img_in = ImageTk.PhotoImage(img1)
+        # save_path1 = 'dis_images/out-d.jpg'
+        # plt.savefig(save_path1)
+        # plt.close()
+        #
+        # in_data = pd.DataFrame({'indegree': ind})
+        # # sns.kdeplot(data=in_data)
+        # data = pd.DataFrame({'indegree': ind, 'outdegree': outd})
+        # sns.kdeplot(data=data)
+        # buffer2 = io.BytesIO()
+        # plt.savefig(buffer2, format='PNG')
+        # img2 = Image.open(io.BytesIO(buffer2.getvalue()))
+        # img4 = img2.resize((1000, 500))
+        # img_out = ImageTk.PhotoImage(img4)
+        #
+        # f = plt.figure(figsize=(5, 5), dpi=100)
+        # a = f.add_subplot(111)
+        # canvas = FigureCanvasTkAgg(f, master=dis_frame2)
+        # canvas.draw()
+        # canvas.get_tk_widget().pack(side=tk.TOP, fill='both', expand=1)
+
+        # save_path2 = 'dis_images/in-d.jpg'
+        # plt.savefig(save_path2)
+        # plt.close()
 
         indegree_image = Image.open('dis_images/in-d.png')
         outdegree_image = Image.open('dis_images/out-d.png')
@@ -389,12 +462,92 @@ def statistics_window():
         img_in = ImageTk.PhotoImage(indegree_image.resize((500, 500), Image.ANTIALIAS))
         img_out = ImageTk.PhotoImage(outdegree_image.resize((500, 500), Image.ANTIALIAS))
 
+        # in_img_label = tk.Label(dis_frame1, image=img_in)
+        # out_img_label = tk.Label(dis_frame2, image=img_out)
         in_img_label = tk.Label(dis_frame1, image=img_in)
         out_img_label = tk.Label(dis_frame2, image=img_out)
         in_img_label.image = img_in
         out_img_label.image = img_out
         in_img_label.pack()
         out_img_label.pack()
+
+    def refresh_dis_graph():
+        global dis_frame1, dis_frame2
+        # for widget in dis_frame1.winfo_children():
+        #     # widget.destory()
+        #     # widget.pack_forget()
+        #     dis_frame1.pack_forget()
+
+        # for widget1 in dis_frame2.winfo_children():
+        #     # widget1.destory()
+        #     # widget1.pack_forget()
+        #     dis_frame2.pack_forget()
+        dis_frame2.pack_forget()
+        dis_frame2.pack(side='left', fill='both', expand=True)
+        # statistics_window.after(1000, show_dis_graph)
+        # show_dis_graph()
+
+    # distribution graph view
+    def create_dis_image_view():
+        global img_out, img_in, img_out_d, img_out_dd
+        # global dis_frame1, dis_frame2, img0, img1
+        #
+        # mb1 = tk.Menubutton(distributionFrame, text='Show Distribution Graph', relief='raised', font=f1, width=120)
+        # mb1.pack(anchor=tk.NW)
+        #
+        # show_dis_button = tk.Menu(mb1, tearoff=False)
+        # show_dis_button.add_command(label='                Show Distribution Graph                ', command=show_dis_graph, font=f1)
+        # show_dis_button.add_command(label='                Refresh Distribution Graph                 ', command=refresh_dis_graph, font=f1)
+        #
+        # mb1.config(menu=show_dis_button)
+
+        # dis_frame1 = tk.Frame(distributionFrame, width=500)
+        # dis_frame1.pack(side='left', fill='y', expand=True)
+        # dis_frame2 = tk.Frame(distributionFrame, width=500)
+        # dis_frame2.pack(side='left', fill='y', expand=True)
+
+        dis_frame2 = tk.Frame(distributionFrame,width=0.1)  # empty
+        dis_frame2.pack(side='left', fill='y', expand=True)
+
+        dis_frame1 = tk.Frame(distributionFrame, bg='red', width=500)
+        dis_frame1.pack(side='left', fill='both', expand=True)
+
+        dis_frame3 = tk.Frame(distributionFrame, bg='yellow', width=0.1)  # empty
+        dis_frame3.pack(side='left', fill='both', expand=True)
+        dis_frame4 = tk.Frame(distributionFrame, bg='red', width=0.1)  # empty
+        dis_frame4.pack(side='left', fill='y', expand=0)
+
+        outdddegree_image = Image.open('dis_images/out-ddd.png')  # empty
+        outddegree_image = Image.open('dis_images/out-dd.png')  # empty
+
+        outdegree_image = Image.open('dis_images/all-d.png')
+
+        indegree_image = Image.open('dis_images/in-d.png')  # empty
+
+        img_in = ImageTk.PhotoImage(indegree_image.resize((1, 1), Image.ANTIALIAS))  # empty
+
+        img_out = ImageTk.PhotoImage(outdegree_image.resize((1000, 500), Image.ANTIALIAS))
+
+        img_out_d = ImageTk.PhotoImage(outddegree_image.resize((1, 1), Image.ANTIALIAS))  # empty
+        img_out_dd = ImageTk.PhotoImage(outdddegree_image.resize((1, 1), Image.ANTIALIAS))  # empty
+
+        out_img_label_dd = tk.Label(dis_frame4, image=img_out_dd)  # empty
+        out_img_label_d = tk.Label(dis_frame3, image=img_out_d)  # empty
+
+        out_img_label = tk.Label(dis_frame1, image=img_out)
+
+        in_img_label = tk.Label(dis_frame2, image=img_in)  # empty
+
+
+        # out_img_label.image = img_out
+        # in_img_label.image = img_in
+        out_img_label_dd.pack()  # empty
+        out_img_label_d.pack()  # empty
+
+        out_img_label.pack()
+
+        in_img_label.pack()  # empty
+
     """测试
     # # scrollbar
     # statsScroll = Scrollbar(factsFrame)
@@ -528,6 +681,7 @@ def visualisation_window():
     global subgraphs_rendered
     subgraphs_rendered = 0
     txt = Text()
+    images = None
 
     # Select Database Bar
     selectedDatabases = [
@@ -560,6 +714,8 @@ def visualisation_window():
         db_conn.download_data(db_name, new_relation, new_entity, new_train)
 
     def begin_search():
+        global images
+        images = None
         global subgraphs_rendered
         max_hops = 2
         max_entities = 2
@@ -577,10 +733,12 @@ def visualisation_window():
             temp_list.append(n)
         print(temp_list)
         # network.draw_subgraph(graphFrame, subgraphs_rendered, entityBox.get(), relationBox.get(), max_hops, max_entities, file_entity, file_relation, file_fact)
-        subgraphs_rendered += 1
+
         # network1.first_func(entityBox.get(), relationBox.get(), max_hops, max_entities, file_entity, file_relation, file_fact)
-        network1.first_func(temp_list, relationBox.get(), max_entities, file_entity, file_relation, file_fact)
-        image_view()
+        network1.first_func(temp_list, relationBox.get(), max_entities, file_entity, file_relation, file_fact,
+                            graphFrame, subgraphs_rendered)
+        subgraphs_rendered += 1
+        # image_view()
 
     # frame for graph
     graphFrame = Frame(window, highlightbackground="black", highlightthickness=1, bg="#f7f3f2")
@@ -590,7 +748,7 @@ def visualisation_window():
     extraFrame.place(x=200, y=120, width=0, height=0)
 
     def image_view():
-        global txt, scroll_bar
+        global txt, scroll_bar, images
         scroll_bar = Scrollbar(graphFrame)
         scroll_bar.pack(side=RIGHT, fill=Y)
 
@@ -606,8 +764,8 @@ def visualisation_window():
         print(len(images))
         for i in range(len(images)):
             txt.image_create(END, image=images[i])
-            txt.insert(tk.INSERT, '第%d张' % (i + 1))
-        txt.image = images
+            txt.insert(tk.INSERT, 'the %dth image' % (i + 1))
+        # txt.image = images
 
     def clear_images():
         global txt, scroll_bar

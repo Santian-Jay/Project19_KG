@@ -13,7 +13,7 @@ frame1.pack()             #显示第一页
 
 tk.Label(frame1, text='尊敬的各位领导：', font=24, padx=30, pady=30).pack(side=tk.LEFT, anchor=tk.N)
 
-img = tk.PhotoImage(file='image/gaoci.png')
+img = tk.PhotoImage(file='../image/gaoci.png')
 label_img = tk.Label(frame1, image=img, pady=30, padx=30, bd=0)
 label_img.pack(side=tk.LEFT, anchor=tk.N)
 

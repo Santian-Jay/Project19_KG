@@ -3,8 +3,8 @@ from PIL import Image
 import numpy as np
 import tkinter
 
-writer = SummaryWriter("logs")
-image_path = "dataset/train/ants/0013035.jpg"
+writer = SummaryWriter("../logs")
+image_path = "../dataset/train/ants/0013035.jpg"
 img_PIL = Image.open(image_path)
 image_array = np.array(img_PIL)
 print(type(image_array))

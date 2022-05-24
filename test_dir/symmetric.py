@@ -6,7 +6,7 @@ threshold = 0.95
 total = {}
 newDic = {}
 
-file = open("dataset/train.txt", "r")
+file = open("../dataset/train.txt", "r")
 entryNumber = (int)(file.readline())
 
 """

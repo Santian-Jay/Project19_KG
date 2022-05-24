@@ -15,7 +15,7 @@ root.title("在tkinter中显示matplotlib")
 frame1 = tk.Frame(root)   #frame1 可以看做是本子的第一页
 frame1.pack()             #显示第一页
 
-img = tk.PhotoImage(file='image/Figure_1.png')
+img = tk.PhotoImage(file='../image/Figure_1.png')
 
 label_img = tk.Label(frame1, image=img, pady=30, padx=30, bd=0)
 label_img.pack(side=tk.LEFT, anchor=tk.N)

@@ -28,7 +28,7 @@ root.title("tkinter show networkx")
 frame1 = tk.Frame(root)   # frame1 Can be regarded as the first page of the book
 frame1.pack()             # show first page
 
-img = tk.PhotoImage(file='./subgraph_v1/image/pic-1.png')
+img = tk.PhotoImage(file='../subgraph_v1/image/pic-1.png')
 # img = tk.PhotoImage(file=save_path)
 label_img = tk.Label(frame1, image=img, pady=30, padx=30, bd=0)
 label_img.pack(side=tk.LEFT, anchor=tk.N)

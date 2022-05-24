@@ -4,11 +4,8 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
 import os
-import multi_graph
 import network
-import db_conn
-import network1
-
+from test_dir import db_conn, multi_graph
 
 # ====================================global variables==============================================
 data_folder_path = f"{os.getcwd()}\dataset"

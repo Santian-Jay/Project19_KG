@@ -2,9 +2,9 @@
 # the query statement is the same as the ordinary statement
 import pymysql
 
-f_entity = open('subgraph_v1/entity2id.txt', 'r')
-f_relation = open('subgraph_v1/relation2id.txt', 'r')
-f_train = open('subgraph_v1/train2id.txt', 'r')
+f_entity = open('../subgraph_v1/entity2id.txt', 'r')
+f_relation = open('../subgraph_v1/relation2id.txt', 'r')
+f_train = open('../subgraph_v1/train2id.txt', 'r')
 
 # read all content
 # data = f.read()

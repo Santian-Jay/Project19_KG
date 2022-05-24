@@ -17,7 +17,7 @@ def checkRepeat(list1, list2):
             isIn = True
     return isIn
 
-file = open("subgraph_v1/train2id.txt", "r")
+file = open("../subgraph_v1/train2id.txt", "r")
 entryNumber = (int)(file.readline())
 
 """

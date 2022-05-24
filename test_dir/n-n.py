@@ -3,9 +3,9 @@ rig = {}
 rellef = {}
 relrig = {}
 
-triple = open("dataset/train2id.txt", "r")
-valid = open("dataset/valid2id.txt", "r")
-test = open("dataset/test2id.txt", "r")
+triple = open("../dataset/train2id.txt", "r")
+valid = open("../dataset/valid2id.txt", "r")
+test = open("../dataset/test2id.txt", "r")
 #
 tot = (int)(triple.readline())
 
@@ -105,7 +105,7 @@ s11 = 0
 s1n = 0
 sn1 = 0
 snn = 0
-f = open("dataset/train2id.txt", "r")
+f = open("../dataset/train2id.txt", "r")
 tot = int(f.readline())
 for i in range(tot):
     content = f.readline()
@@ -123,7 +123,7 @@ for i in range(tot):
 f.close()
 
 # 以下可用代码
-f = open("dataset/train2id.txt", "r")
+f = open("../dataset/train2id.txt", "r")
 f11 = open("1-1.txt", "w")
 f1n = open("1-n.txt", "w")
 fn1 = open("n-1.txt", "w")

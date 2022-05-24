@@ -1,7 +1,7 @@
 relation_head = {}
 relation_tail = {}
 
-data = open("subgraph_v1/train2id.txt", "r")
+data = open("../subgraph_v1/train2id.txt", "r")
 
 total = int(data.readline())
 

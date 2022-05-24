@@ -4,7 +4,7 @@ rellef = {}
 relrig = {}
 
 # triple = open("dataset/train2id.txt", "r")
-valid = open("dataset/valid2id.txt", "r")
+valid = open("../dataset/valid2id.txt", "r")
 # test = open("test2id.txt", "r")
 
 tot = (int(valid.readline()))

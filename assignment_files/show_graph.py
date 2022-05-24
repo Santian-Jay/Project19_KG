@@ -81,24 +81,24 @@ for edge in gprah_data:
 
 pos = nx.spring_layout(G, k=10)
 
-# degree = nx.degree_histogram(G)
+degree = nx.degree_histogram(G)
 # x = range(len(degree))
 # y = [z/float(sum(degree)) for z in degree]
 
-nx.draw(G, pos=pos, with_labels=True)
+# nx.draw(G, pos=pos, with_labels=True)
 
-# As_1 = nx.adjacency_matrix(G, weight=None)  # Ignore weights when converting to matrix 'weight=None'
-# A_1 = As_1.todense()
-# result = np.sum(A_1, axis=1)
-# result_1 = np.sum(A_1, axis=0)
+As_1 = nx.adjacency_matrix(G, weight=None)  # Ignore weights when converting to matrix 'weight=None'
+A_1 = As_1.todense()
+result = np.sum(A_1, axis=1)
+result_1 = np.sum(A_1, axis=0)
+
+arr_result = np.array(result)
+arr_result_1 = np.array(result_1)
+
+in_degree = np.sum(arr_result_1) / nx.number_of_nodes(G)
+out_degree = np.sum(arr_result) / nx.number_of_nodes(G)
 #
-# arr_result = np.array(result)
-# arr_result_1 = np.array(result_1)
-#
-# in_degree = np.sum(arr_result_1) / nx.number_of_nodes(G)
-# out_degree = np.sum(arr_result) / nx.number_of_nodes(G)
-#
-# print(in_degree, out_degree)
+print(in_degree, out_degree)
 plt.show()
 
 

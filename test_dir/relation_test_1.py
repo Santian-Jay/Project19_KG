@@ -3,7 +3,7 @@ rig = {}
 rellef = {}
 relrig = {}
 
-triple = open("subgraph_v1/train2id.txt", "r")
+triple = open("../subgraph_v1/train2id.txt", "r")
 # valid = open("dataset/valid2id.txt", "r")
 # test = open("test2id.txt", "r")
 
@@ -78,7 +78,7 @@ s1n=0
 sn1=0
 snn=0
 
-f = open("dataset/test2id.txt", "r")
+f = open("../dataset/test2id.txt", "r")
 f11 = open("1-1.txt", "w")
 f1n = open("1-n.txt", "w")
 fn1 = open("n-1.txt", "w")

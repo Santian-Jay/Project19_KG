@@ -22,7 +22,7 @@ class MyData(Dataset):
         return len(self.img_path)
 
 
-root_dir = "dataset/train"
+root_dir = "../dataset/train"
 
 ants_label_dir = "ants"
 bees_label_dir = "bees"

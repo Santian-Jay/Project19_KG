@@ -6,10 +6,10 @@ import matplotlib.pyplot as plt
 G = nx.MultiGraph()  # multiple graph
 
 # open file
-f_entity = open('subgraph_v1/entity2id.txt', 'r')
-f_relation = open('subgraph_v1/relation2id.txt', 'r')
-f_train = open('subgraph_v1/train2id.txt', 'r')
-f_test = open('dataset/test2id.txt', 'r')
+f_entity = open('../subgraph_v1/entity2id.txt', 'r')
+f_relation = open('../subgraph_v1/relation2id.txt', 'r')
+f_train = open('../subgraph_v1/train2id.txt', 'r')
+f_test = open('../dataset/test2id.txt', 'r')
 
 # read all data
 # data = f.read()

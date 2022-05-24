@@ -25,20 +25,24 @@ def get_degree(graph):
     A_1 = As_1.todense()
     result = np.sum(A_1, axis=1)
     result_1 = np.sum(A_1, axis=0)
-
     arr_result = np.array(result)
     arr_result_1 = np.array(result_1)
-
     new_arr = np.array(A_1)   # covert matrix to array
 
 
-    outd = np.sum(new_arr, axis=1)
-    out_data = pd.DataFrame({'outdegree': outd})
-    sns.kdeplot(data=out_data)
-    save_path1 = 'dis_images/out-d.png'
-    plt.savefig(save_path1)
+    outddd = np.sum(new_arr, axis=1)
+    out_dddata = pd.DataFrame({'outdegree': outddd})
+    sns.kdeplot(data=out_dddata)
+    save_path11 = 'dis_images/out-ddd.png'
+    plt.savefig(save_path11)
     plt.close()
 
+    outdd = np.sum(new_arr, axis=1)
+    out_ddata = pd.DataFrame({'outdegree': outdd})
+    sns.kdeplot(data=out_ddata)
+    save_path11 = 'dis_images/out-dd.png'
+    plt.savefig(save_path11)
+    plt.close()
 
     ind = np.sum(new_arr, axis=0)
     in_data = pd.DataFrame({'indegree': ind})
@@ -46,6 +50,17 @@ def get_degree(graph):
     save_path2 = 'dis_images/in-d.png'
     plt.savefig(save_path2)
     plt.close()
+
+    outd = np.sum(new_arr, axis=1)
+    out_data = pd.DataFrame({'outdegree': outd, 'indegree': ind})
+    sns.kdeplot(data=out_data)
+    save_path1 = 'dis_images/all-d.png'
+    plt.savefig(save_path1)
+    plt.close()
+
+
+
+
 
     ave_indegree, ave_outdegree = (np.sum(arr_result_1) / nx.number_of_nodes(graph)), (np.sum(arr_result) / nx.number_of_nodes(graph))
     return ave_indegree, ave_outdegree

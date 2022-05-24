@@ -59,9 +59,9 @@ import pymysql
 G = nx.MultiGraph()  #无向图
 
 #打开文件
-f_entity = open('subgraph_v1/entity2id.txt', 'r')
-f_relation = open('subgraph_v1/relation2id.txt', 'r')
-f_train = open('subgraph_v1/train2id.txt', 'r')
+f_entity = open('../subgraph_v1/entity2id.txt', 'r')
+f_relation = open('../subgraph_v1/relation2id.txt', 'r')
+f_train = open('../subgraph_v1/train2id.txt', 'r')
 
 #读取全部内容
 #data = f.read()
