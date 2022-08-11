@@ -16,4 +16,6 @@ for i in all_data:
     second = first.split()
     new.append(second)
 
+print(new)
+
 f.close()  # close file

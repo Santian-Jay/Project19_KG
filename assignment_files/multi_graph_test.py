@@ -152,3 +152,18 @@ def data_only_graph(new_entity, new_relation, new_train):
 
     degree = nx.degree_histogram(G)       # Get the sequence of degree distributions of all nodes in the graph
 
+
+file1 = open("dataset/YAGO3-10/entity2id.txt", 'r', encoding='UTF-8')
+n_entity = int(file1.readline())
+
+
+file2 = open("dataset/YAGO3-10/relation2id.txt", 'r', encoding='UTF-8')
+n_relation = int(file2.readline())
+
+file3 = open("dataset/YAGO3-10/train2id.txt", 'r', encoding='UTF-8')
+n_train = int(file3.readline())
+
+
+print(n_entity, n_relation, n_train)
+# data_only_graph()
+

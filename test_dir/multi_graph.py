@@ -155,7 +155,7 @@ def get_degree(graph, node):
     As_1 = nx.adjacency_matrix(graph, weight=None)   #Ignore weights when converting to matrix 'weight=None'
     # print(As_1)
     A_1 = As_1.todense()
-    # print(A_1)
+    print(A_1)
     result = np.sum(A_1, axis=1)
     result_1 = np.sum(A_1, axis=0)
 

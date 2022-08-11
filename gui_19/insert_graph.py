@@ -1,5 +1,5 @@
-from inverse import inver
-from symmetric import symme
+from inverse_v3 import inver
+from symmetric_v3 import symme
 from get_graph_data import gi
 from database import db
 

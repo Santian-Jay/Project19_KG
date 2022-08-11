@@ -13,6 +13,7 @@ from inverse import inver
 from entity_feature import efeature
 import nnrelation
 import db_conn
+from degree_test import deg
 from PIL import Image, ImageTk
 import network1
 import json
@@ -39,7 +40,8 @@ def get_statistics(statsFrame):
     multi_graph.data_only_graph(new_entity, new_relation, new_train)
     t_nodes = multi_graph.nx.number_of_nodes(multi_graph.G)
     t_edges = multi_graph.nx.number_of_edges(multi_graph.G)
-    in_degree_ave, out_degree_ave = multi_graph.get_degree(multi_graph.G)
+    # in_degree_ave, out_degree_ave = multi_graph.get_degree(multi_graph.G)
+    in_degree_ave, out_degree_ave = deg.get_result()
     n_relation_head, n_relation_tail = efeature.get_count()
     n_11, n_1n, n_n1, n_nn = nnrelation.nn_categorization(new_train)
 
@@ -56,9 +58,12 @@ def get_statistics(statsFrame):
 
 
 def update_from_file():
-    f_entity = open(file_entity, 'r', encoding='UTF-8')
-    f_relation = open(file_relation, 'r', encoding='UTF-8')
-    f_train = open(file_fact, 'r', encoding='UTF-8')
+    # f_entity = open(file_entity, 'r', encoding='UTF-8')
+    # f_relation = open(file_relation, 'r', encoding='UTF-8')
+    # f_train = open(file_fact, 'r', encoding='UTF-8')
+    f_entity = open('dataset/entity2id.txt', 'r', encoding='UTF-8')
+    f_relation = open('dataset/relation2id.txt', 'r', encoding='UTF-8')
+    f_train = open('dataset/train2id.txt', 'r', encoding='UTF-8')
 
     all_entity = f_entity.readlines()
     all_relation = f_relation.readlines()
@@ -389,46 +394,12 @@ def statistics_window():
 
         dis_frame1 = tk.Frame(distributionFrame, bg='red', width=150)
         dis_frame1.pack(side='left', fill='y', expand=True)
-        # dis_frame2 = tk.Frame(distributionFrame, bg='blue', width=150)
-        # dis_frame2.pack(side='left', fill='y', expand=True)
-        # dis_frame3 = tk.Frame(distributionFrame, bg='yellow', width=150)  # empty
-        # dis_frame3.pack(side='left', fill='y', expand=True)
-        # dis_frame4 = tk.Frame(distributionFrame, bg='green', width=150)  # empty
-        # dis_frame4.pack(side='left', fill='y', expand=0)
-        # dis_frame5 = tk.Frame(distributionFrame, bg='green', width=150)  # empty
-        # dis_frame5.pack(side='left', fill='y', expand=0)
-        # dis_frame6 = tk.Frame(distributionFrame, bg='orange', width=150)  # empty
-        # dis_frame6.pack(side='left', fill='y', expand=0)
 
-        # outdddddegree_image = Image.open('dis_images/out-ddddd.png')  # empty
-        # outddddegree_image = Image.open('dis_images/out-dddd.png')  # empty
-        # outdddegree_image = Image.open('dis_images/out-ddd.png')  # empty
-        # outddegree_image = Image.open('dis_images/out-dd.png')  # empty
         indegree_image = Image.open('dis_images/in-d.png')
-        # outdegree_image = Image.open('dis_images/out-d.png')
-
         img_in = ImageTk.PhotoImage(indegree_image.resize((1000, 500), Image.ANTIALIAS))
-        # img_out = ImageTk.PhotoImage(outdegree_image.resize((150, 150), Image.ANTIALIAS))
-        # img_out_d = ImageTk.PhotoImage(outddegree_image.resize((150, 150), Image.ANTIALIAS))  # empty
-        # img_out_dd = ImageTk.PhotoImage(outdddegree_image.resize((150, 150), Image.ANTIALIAS))  # empty
-        # img_out_ddd = ImageTk.PhotoImage(outddddegree_image.resize((150, 150), Image.ANTIALIAS))  # empty
-        # img_out_dddd = ImageTk.PhotoImage(outdddddegree_image.resize((150, 150), Image.ANTIALIAS))  # empty
-
-        # out_img_label_dddd = tk.Label(dis_frame6, image=img_out_ddd)  # empty
-        # out_img_label_ddd = tk.Label(dis_frame5, image=img_out_ddd)  # empty
-        # out_img_label_dd = tk.Label(dis_frame4, image=img_out_dd)  # empty
-        # out_img_label_d = tk.Label(dis_frame3, image=img_out_d)  # empty
         in_img_label = tk.Label(dis_frame1, image=img_in)
-        # out_img_label = tk.Label(dis_frame2, image=img_out)
-        # in_img_label.image = img_in
-        # out_img_label.image = img_out
-
-        # out_img_label_dddd.pack()  # empty
-        # out_img_label_ddd.pack()  # empty
-        # out_img_label_dd.pack()  # empty
-        # out_img_label_d.pack()  # empty
         in_img_label.pack()
-        # out_img_label.pack()
+
     """测试
     # # scrollbar
     # statsScroll = Scrollbar(factsFrame)

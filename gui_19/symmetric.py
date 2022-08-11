@@ -10,17 +10,17 @@ newDic = {}
 class Symmetric:
     def __init__(self):
         self.symmertric_func()
-        self.data = open("symmetric.txt", 'r')
+        self.data = open("symmetric.txt", 'r', encoding='UTF-8')
         self.n_sy = self.data.readline()
         if self.n_sy == "": self.n_sy = 0
         print(self.n_sy)
+
     def get_data(self):
         return self.n_sy
 
-
     def symmertric_func(self):
         symmetricIndex = 0
-        file = open("dataset/te.txt", "r")
+        file = open("dataset/train2id.txt", "r", encoding='UTF-8')
         entryNumber = (int)(file.readline())
 
         """
@@ -66,7 +66,7 @@ class Symmetric:
 
         # for i in range(len(symmetric)):
         #     print(symmetric[i])
-
+        print(symmetric)
         fSymmetric = open("symmetric.txt", "w")
 
         # print(relationWithHT)
@@ -87,9 +87,5 @@ class Symmetric:
         for n in new_list:
             fSymmetric.write("%s\t%s\n" % (n, new_list[n]))
 
+
 symme = Symmetric()
-
-
-
-
-

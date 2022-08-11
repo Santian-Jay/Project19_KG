@@ -1,17 +1,29 @@
+import os
+import shutil
 import tkinter
 import tkinter as tk
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, messagebox
+import glob
+from PIL import ImageTk, Image
+import image
+import tkinter.font as tkFont
+import nnrelation
+import json
+from degree_test import deg
+import path_test_v3
+
 from database import db
 from insert_graph import insert
 from tkinter.messagebox import *
-
 
 
 class VisualFrame(tk.Frame):  # 继承Frame类
 
     def __init__(self, root):
         super().__init__(root)
+        self.framed = None
+        self.txt = Text()
         self.hop_count = IntVar()
         self.hop_checked = IntVar()
         self.num_entities = IntVar()
@@ -19,7 +31,8 @@ class VisualFrame(tk.Frame):  # 继承Frame类
         self.createPage()
 
     def createPage(self):
-        framea = tk.Frame(self, bg='green')   #
+        global framed, txt
+        framea = tk.Frame(self, bg='green')  #
         framea.pack(side='top', fill='both', ipadx=10, ipady=10, expand=True)
 
         frameb = tk.Frame(framea, height=60, bg='yellow')
@@ -28,9 +41,8 @@ class VisualFrame(tk.Frame):  # 继承Frame类
         framed = tk.Frame(framea, bg='pink')
         framed.pack(side='left', fill='both', ipadx=10, ipady=10, expand=True)
 
-        framec = tk.Frame(framea, width=300, bg='gray')    # 右边的部分
+        framec = tk.Frame(framea, width=300, bg='gray')  # 右边的部分
         framec.pack(side='right', fill='y', ipadx=10, ipady=10, expand=0)
-
 
         """
         测试代码
@@ -45,8 +57,8 @@ class VisualFrame(tk.Frame):  # 继承Frame类
         """
 
         var = tk.StringVar()
-        label = tk.Label(framec, background="light grey", width=20, height=2, text="Subgraph", font=140)
-        label.pack(pady=50)
+        self.label = tk.Label(framec, background="light grey", width=20, height=2, text="Subgraph", font=140)
+        self.label.pack(pady=50)
 
         # Entity Search Entry Box
         self.entityBox = Entry(framec, width=20, font=140)
@@ -83,6 +95,8 @@ class VisualFrame(tk.Frame):  # 继承Frame类
         db_test_button = Button(framec, text="Test DB download", width=20, command=self.test_db, font=140)
         db_test_button.pack(pady=5, padx=10)
 
+        search_button = Button(framec, text="Clear Images", width=20, command=self.clear_images, font=140)
+        search_button.pack(pady=15, padx=10)
 
         tk.Button(self, text='Select Files', command=self.upload_file).place(x=0, y=0, width=200, height=50)
 
@@ -90,84 +104,247 @@ class VisualFrame(tk.Frame):  # 继承Frame类
         selected_db.set("Select your database")
         selectDatabase = ttk.Combobox(self, textvariable=selected_db, width=30, font=80)
         selectDatabase.place(x=735, rely=0, width=450, height=50)
+        # self.image_view(framed)
 
     def upload_file(self):
         print('select your files')
 
     def begin_search(self):
+        global framed
+
+        self.image_view(framed)
         print('begin search')
         print(self.entityBox.get(), self.relationBox.get())
         print(self.num_entities.get(), self.hop_count.get())
         # print(self.ent_checked, self.num_entities, self.hop_checked, self.hop_count)
         # print(self.num_entities)
+        deg.__init__()
 
     def test_db(self):
         print('begin test_db')
 
+    def image_view(self, frame):
+        global txt, scroll_bar, images
+        scroll_bar = Scrollbar(frame)
+        scroll_bar.pack(side=RIGHT, fill=Y)
+
+        # txt = Text(graphFrame, width=200, height=300)
+        txt = Text(frame, height=220)
+        txt.config(yscrollcommand=scroll_bar.set)  # 在Text组件中使用这个滚动条
+        txt.pack(fill='both')
+
+        scroll_bar.config(command=txt.yview)  # 让这个滚动条发挥作用
+
+        images = glob.glob('subgraph_images/*.png')
+        images = [ImageTk.PhotoImage(Image.open(photo)) for photo in images]
+        # print(len(images))
+        for i in range(len(images)):
+            txt.image_create(END, image=images[i])
+            txt.insert(tk.INSERT, 'the %dth image' % (i + 1))
+
+    def clear_images(self):
+        global txt, scroll_bar
+        data = txt.get(1.0, END)
+        if not os.path.exists('subgraph_images'):
+            os.mkdir('subgraph_images')
+        else:
+            shutil.rmtree('subgraph_images')
+            os.mkdir('subgraph_images')
+        if len(data) > 1:
+            r = messagebox.askokcancel('Warning', 'Confirm to clear?')
+            if r:
+                txt.delete(1.0, END)
+                txt.pack_forget()
+                scroll_bar.pack_forget()
+            else:
+                pass
+        else:
+            messagebox.showwarning('Warning', 'nothing to clear.')
+
 
 class StatisticFrame(tk.Frame):  # 继承Frame类
-
     def __init__(self, root):
         super().__init__(root)
+        self.framee = None
+        self.framef = None
+        self.frameg = None
+        self.frameh = None
+        self.cate_text_view = Text()
+        self.f1 = tkFont.Font(family='microsoft yahei', size=15)
+        self.f2 = tkFont.Font(family='microsoft yahei', size=16, weight='bold')
+        self.f3 = tkFont.Font(family='times', size=18, slant='italic', weight='bold')
+        s = ttk.Style()
+        s.configure('Treeview', rowheight=40)
+        s.configure('Treeview.Heading', font=self.f2)
         self.table_view = tk.Frame()
         self.table_view.pack()
 
         self.createPage()
 
     def createPage(self):
+        global cate_text_view, framee, frameg, frameh, f1
 
-        columns = ('n_entity', "n_relation", "n_edge", "n_n", "n_1", "1_1", "1_n", "inverse", "symmetric", "in_degree",
-                   "out_degree")
-        self.tree_view = ttk.Treeview(self, show='headings', columns=columns)
-        self.tree_view.column('n_entity', width=80, anchor='center')
-        self.tree_view.column('n_relation', width=80, anchor='center')
-        self.tree_view.column('n_edge', width=80, anchor='center')
-        self.tree_view.column('n_n', width=80, anchor='center')
-        self.tree_view.column('n_1', width=80, anchor='center')
-        self.tree_view.column('1_1', width=80, anchor='center')
-        self.tree_view.column('1_n', width=80, anchor='center')
-        self.tree_view.column('inverse', width=80, anchor='center')
-        self.tree_view.column('symmetric', width=80, anchor='center')
-        self.tree_view.column('in_degree', width=80, anchor='center')
-        self.tree_view.column('out_degree', width=80, anchor='center')
+        frameb = tk.Frame(self, height=60, bg='yellow')
+        frameb.pack(side='top', fill='x', ipadx=0, ipady=0, expand=0)
 
-        self.tree_view.heading('n_entity', text='n_entity')
-        self.tree_view.heading('n_relation', text='n_relation')
-        self.tree_view.heading('n_edge', text='n_edge')
-        self.tree_view.heading('n_n', text='n_n')
-        self.tree_view.heading('n_1', text='n_1')
-        self.tree_view.heading('1_1', text='1_1')
-        self.tree_view.heading('1_n', text='1_n')
-        self.tree_view.heading('inverse', text='inverse')
-        self.tree_view.heading('symmetric', text='symmetric')
-        self.tree_view.heading('in_degree', text='in_degree')
-        self.tree_view.heading('out_degree', text='out_degree')
+        framee = tk.Frame(self, bg='green')  # statistics frame, left
+        framee.pack(side='left', fill='both', ipadx=10, ipady=10, expand=True)
 
-        self.tree_view.pack(fill=tkinter.BOTH, expand=True)
+        framef = tk.Frame(self, bg='yellow')  # right frame
+        framef.pack(side='right', fill='both', ipadx=0, ipady=0, expand=True)
 
-        insert.insert_json()
+        frameg = tk.Frame(framef, bg='red')  # distribution frame
+        frameg.pack(side='top', fill='both', ipadx=10, ipady=10, expand=True)
 
-        self.show_data()
+        frameh = tk.Frame(framef, bg='pink')  # relation category frame
+        frameh.pack(side='bottom', fill='both', ipadx=10, ipady=10, expand=True)
 
-        tk.Button(self, text='Refresh Table', command=self.show_data).pack(anchor=tk.E, pady=5)
+        tk.Button(self, text='Select Files', command=self.upload_file).place(x=0, y=4, width=200, height=50)
 
-    def show_data(self):
+        selected_db = StringVar(self)
+        selected_db.set("Select your database")
+        selectDatabase = ttk.Combobox(self, textvariable=selected_db, width=30, font=80)
+        selectDatabase.place(x=735, y=4, width=450, height=50)
 
-        for _ in map(self.tree_view.delete, self.tree_view.get_children('')):
+        self.create_base_tree_view()
+        self.create_cate_view()
+        self.create_dis_image_view()
+
+    def upload_file(self):
+        print('select your files')
+
+    def show_category1(self):
+        global cate_text_view, framee, frameg, frameh, f1
+        f1 = tkFont.Font(family='microsoft yahei', size=15)
+        data = cate_text_view.get(1.0, END)
+        if len(data) > 1:
+            cate_text_view.delete(1.0, END)
+        else:
             pass
-        graph = db.all_graph()
-        index = 0
-        for g in graph:
-            self.tree_view.insert('', index + 1, values=(
-                g['n_entity'],
-                g['n_relation'],
-                g['n_edge'],
-                g['n_n'],
-                g['n_1'],
-                g['1_1'],
-                g['1_n'],
-                g['inverse'],
-                g['symmetric'],
-                g['in_degree'],
-                g['out_degree']
-            ))
+        cate1_content = ''
+        f11 = open('dataset/1-1.txt', 'r')
+        n_11 = int(f11.readline())
+        cate1_content += '1-1 has %d \n' % n_11
+        for index in range(n_11):
+            content = f11.readline().strip()
+            cate1_content += (content + ', ')
+        cate1_content += '\n\n'
+
+        f1n = open('dataset/1-n.txt', 'r')
+        n_1n = int(f1n.readline())
+        cate1_content += '1-n has %d \n' % n_1n
+        for index in range(n_1n):
+            content = f1n.readline().strip()
+            cate1_content += (content + ', ')
+        cate1_content += '\n\n'
+
+        fn1 = open('dataset/n-1.txt', 'r')
+        n_n1 = int(fn1.readline())
+        cate1_content += 'n-1 has %d \n' % n_n1
+        for index in range(n_n1):
+            content = fn1.readline().strip()
+            cate1_content += (content + ', ')
+        cate1_content += '\n\n'
+
+        fnn = open('dataset/n-n.txt', 'r')
+        n_nn = int(fnn.readline())
+        cate1_content += 'n-n has %d \n' % n_nn
+        for index in range(n_nn):
+            content = fnn.readline().strip()
+            cate1_content += (content + ', ')
+        cate1_content += '\n\n'
+
+        cate_text_view.insert(tk.INSERT, cate1_content)
+
+    def show_category2(self):
+        global cate_text_view
+        data = cate_text_view.get(1.0, END)
+        if len(data) > 1:
+            cate_text_view.delete(1.0, END)
+        else:
+            pass
+        cate2_content = ''
+        fSymmetric = open('symmetric_v1.txt', 'r')
+        n_symm = int(fSymmetric.readline())
+        cate2_content += 'symmetric has %d \n' % n_symm
+        for index in range(n_symm):
+            content = fSymmetric.readline().strip()
+            cate2_content += (content + ', ')
+        cate2_content += '\n\n'
+
+        fInverse = open('inverse_v1.txt', 'r')
+        n_inve = int(fInverse.readline())
+        cate2_content += 'inverse has %d \n' % n_inve
+        for index in range(n_inve):
+            content = fInverse.readline().strip()
+            cate2_content += (content + ', ')
+        cate2_content += '\n\n'
+        cate_text_view.insert(tk.INSERT, cate2_content)
+
+    def create_cate_view(self):
+        global cate_text_view, framee, frameg, frameh, f1
+        # f1 = tkFont.Font(family='microsoft yahei', size=15)
+        mb = tk.Menubutton(frameh, text='Show Details', relief='raised', font=f1)
+        mb.pack(fill='x', anchor=tk.NW)
+        show_button = tk.Menu(mb, tearoff=False)
+        show_button.add_command(label='                Category 1                ', command=self.show_category1,
+                                font=f1)
+        show_button.add_command(label='                Category 2                ', command=self.show_category2,
+                                font=f1)
+        mb.config(menu=show_button)
+
+        # 右边滚动条
+        r_scroll_bar = Scrollbar(frameh)
+        r_scroll_bar.pack(side=RIGHT, fill=Y)
+        # 底部滚动条
+        b_scroll_bar = Scrollbar(frameh, orient=HORIZONTAL)
+        b_scroll_bar.pack(side=BOTTOM, fill=X)
+
+        cate_text_view = tk.Text(frameh, width=200, height=200)
+        cate_text_view.config(yscrollcommand=r_scroll_bar.set, xscrollcommand=b_scroll_bar.set, font=f1)  # 绑定
+        cate_text_view.pack()
+
+        style_value = ttk.Style()
+        style_value.configure("Text", rowheight=60, font=f1)
+
+        r_scroll_bar.config(command=cate_text_view.yview)  # 绑定
+        b_scroll_bar.config(command=cate_text_view.xview)  # 绑定
+
+    # category base view
+    def create_base_tree_view(self):
+        global cate_text_view, framee, frameg, frameh, f1
+        f1 = tkFont.Font(family='microsoft yahei', size=15)
+
+        columns = ('Entry', 'Value')
+        cate_tree_view = ttk.Treeview(framee, show='headings', columns=columns)
+        cate_tree_view.column('Entry', width=540, anchor='w')
+        cate_tree_view.column('Value', anchor='center')
+
+        cate_tree_view.heading('Entry', text='Entry')
+        cate_tree_view.heading('Value', text='Value')
+        cate_tree_view.pack(fill='both', expand=True)
+
+        style_value = ttk.Style()
+        style_value.configure("Treeview", rowheight=60, font=f1)
+
+        with open('data.json', 'r') as f:
+            json_data = json.load(f)
+            for jd in json_data:
+                cate_tree_view.insert('', index=13, values=(
+                    jd['title'],
+                    jd['value']
+                ))
+
+    # distribution graph view
+    def create_dis_image_view(self):
+        global img_out, img_in, img_out_d, img_out_dd, img_out_ddd, img_out_dddd, cate_text_view, framee, frameg, frameh, f1
+        mb1 = tk.Menubutton(frameg, text='Show Distribution Graph', relief='raised', font=f1)
+        mb1.pack(fill='x', anchor=tk.NW)
+
+        dis_frame1 = tk.Frame(frameg, bg='red')
+        dis_frame1.pack(side='left', fill='both', expand=True)
+        # indegree_image = Image.open('dis_images/in-d.png')
+        indegree_image = Image.open('./subgraph_images/picture-1.png')
+        img_in = ImageTk.PhotoImage(indegree_image.resize((1000, 500), Image.ANTIALIAS))
+        in_img_label = tk.Label(dis_frame1, image=img_in)
+        in_img_label.pack(fill='both', expand=True)

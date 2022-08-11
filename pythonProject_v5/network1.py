@@ -11,6 +11,9 @@ from tkinter.constants import (HORIZONTAL, VERTICAL, RIGHT, LEFT, X, Y, BOTH, BO
 entity = r'./dataset/entity2id.txt'
 relate = r'./dataset/relation2id.txt'
 train = r'./dataset/train2id.txt'
+# entity = open("dataset/YAGO3-10/entity2id.txt", "r", encoding='UTF-8')
+# relate = open("dataset/YAGO3-10/relation2id.txt", "r", encoding='UTF-8')
+# train = open("dataset/YAGO3-10/train2id.txt", "r", encoding='UTF-8')
 max_entity = 15
 
 
@@ -60,7 +63,7 @@ def breadFirstGraphExtract(graph, sub_graph, relation, max_depth, max_entity_num
 # Define function for reading txt file and skip first line, txt content split as tab
 def get_data(file):
     res = []
-    with open(file, 'r') as f:
+    with open(file, 'r', encoding='UTF-8') as f:
         next(f)
         for line in f:
             l = line.split()
@@ -82,7 +85,7 @@ def replace_relate(name):
 # get the relationships
 def get_relation(file):
     res = []
-    with open(file, 'r') as f:
+    with open(file, 'r', encoding='UTF-8') as f:
         next(f)
         for line in f:
             d = line.split()
@@ -170,6 +173,8 @@ def get_muticenter(graph, centers, max_graph_num, relation, max_entities):
                     for path in nx.all_simple_edge_paths(graph, centers[j], centers[i]):
                         new_routes.append(route + path)
             routes = new_routes
+    print('routes')
+    print(routes)
     for k, route in enumerate(routes):
         if k >= max_graph_num:
             break

@@ -19,7 +19,7 @@ class Inverse:
     def __init__(self):
         # super().__init__()
         self.inverse_func()
-        self.data = open("inverse.txt", 'r')
+        self.data = open("inverse.txt", 'r', encoding='UTF-8')
         self.n_inver = self.data.readline().split()
         print(self.n_inver)
 
@@ -27,10 +27,9 @@ class Inverse:
         return self.n_inver
 
     def inverse_func(self):
-        file = open("dataset/train2id.txt", "r")
+        file = open("dataset/train2id.txt", "r", encoding='UTF-8')
         entryNumber = (int)(file.readline())
         inverseIndex = 0
-
         for index in range(entryNumber):
             content = file.readline()
             head, tile, relation = content.strip().split()
@@ -39,7 +38,6 @@ class Inverse:
                 total[relation] = 0
                 relationWithHT[relation] = []
             relationWithHT[relation].append((head, tile))
-
         for i in range(len(relationWithHT)):
             baseDic = relationWithHT[strIndex[i]]
             if i < len(relationWithHT) - 1:
@@ -71,6 +69,9 @@ class Inverse:
                         round += 1
         fInverse = open("inverse.txt", "w")
         fInverse.write("%d\n" % (len(inverse)))
+
+        print(inverse)
+        print(total)
 
         for n in range(len(inverse)):
             h = inverse[n][0][0]
