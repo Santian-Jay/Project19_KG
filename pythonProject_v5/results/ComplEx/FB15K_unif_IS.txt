@@ -1,0 +1,11 @@
+
+optim:adam r:4.0 lamb:0.01, d:100, temp:2.0, lr:0.0001, N_1:30, N_2:30
+
+optim:adam r:4.0 lamb:0.01, d:100, temp:2.0, lr:0.0001, N_1:30, N_2:30
+
+optim:adam r:4.0 lamb:0.01, d:100, temp:2.0, lr:0.0001, N_1:30, N_2:30
+
+optim:adam r:4.0 lamb:0.01, d:100, temp:2.0, lr:0.0001, N_1:30, N_2:30
+
+optim:adam r:4.0 lamb:0.01, d:100, temp:2.0, lr:0.0001, N_1:30, N_2:30
+best_performance: 

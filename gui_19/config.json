@@ -1,0 +1,11 @@
+[
+  {"title": "Models", "value": "TransE"},
+  {"title": "Bern", "value": 1},
+  {"title": "Learning rate", "value": 0.1},
+  {"title": "Number batch", "value": 512},
+  {"title": "Loss", "value": "pair"},
+  {"title": "Negative sampling", "value": "Bern"},
+  {"title": "Number of negative sample", "value": 1},
+  {"title": "Margin", "value": 0},
+  {"title": "Lamb", "value": 0.1}
+]

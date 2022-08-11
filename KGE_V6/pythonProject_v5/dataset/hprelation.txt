@@ -1,0 +1,6 @@
+5
+FriendOf	0
+EnemyOf	1
+LivesWith	2
+BrokeUpWith	3
+HasLunchWith	4
