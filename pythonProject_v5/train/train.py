@@ -76,7 +76,7 @@ def start_training():
         # f.write(json.dumps(json_data))
         # f.truncate()
 
-    dataset = args.task_dir.split('/')[-1]   # 选择数据
+    dataset = args.task_dir.split('/')[-1]   #
     directory = os.path.join('results', args.model)
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -84,7 +84,7 @@ def start_training():
     args.out_dir = directory
     args.perf_file = os.path.join(directory, '_'.join([dataset, args.sample, args.update]) + args.out_file_info + '.txt')
     args.stat_file = os.path.join(directory, '_'.join([dataset, args.sample, args.update]) + '.stat')
-    print('output file name:', args.perf_file, args.stat_file)     # 保存输出路径
+    print('output file name:', args.perf_file, args.stat_file)     # 
 
     logger_init(args)
 
