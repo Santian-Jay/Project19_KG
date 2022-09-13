@@ -58,7 +58,7 @@ def start_training():
 
     print('start training')
     # args.task_dir = '123456'
-    # task_dir = args.task_dir  # 选择数据
+    # task_dir = args.task_dir  #
     # print(task_dir)
     with open('config.json', 'r+') as f:
         json_data = json.load(f)
@@ -76,7 +76,7 @@ def start_training():
         # f.write(json.dumps(json_data))
         # f.truncate()
 
-    dataset = args.task_dir.split('/')[-1]   # 选择数据
+    dataset = args.task_dir.split('/')[-1]   #
     directory = os.path.join('results', args.model)
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -84,11 +84,11 @@ def start_training():
     args.out_dir = directory
     args.perf_file = os.path.join(directory, '_'.join([dataset, args.sample, args.update]) + args.out_file_info + '.txt')
     args.stat_file = os.path.join(directory, '_'.join([dataset, args.sample, args.update]) + '.stat')
-    print('output file name:', args.perf_file, args.stat_file)     # 保存输出路径
+    print('output file name:', args.perf_file, args.stat_file)     #
 
     logger_init(args)
 
-    task_dir = args.task_dir   # 选择数据
+    task_dir = args.task_dir   #
     loader = DataLoader(task_dir, args.N_1)
 
     n_ent, n_rel = loader.graph_size()
