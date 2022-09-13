@@ -1,0 +1,1 @@
+from pythonProject_v5.ttkbootstrap.dialogs.dialogs import *

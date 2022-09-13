@@ -1,0 +1,1 @@
+[{"Index": 0.3514, "Time": "2022-09-12_13-17-01", "Hyper_Params": "lf: pair, ns: Bernoulli, b: True, lr: 0.1, bs: 512, magin: 0, lamb: 0.1, nns: 1", "Best_Perfor": "mrr: 0.35, mr: 6.40, test1: 0.20, test3: 0.40, test10: 0.80"}]

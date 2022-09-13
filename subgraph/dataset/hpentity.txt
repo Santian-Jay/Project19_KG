@@ -1,0 +1,6 @@
+5
+Harry	0
+Hagrid	1
+Hermione	2
+Ron	3
+Snape	4
