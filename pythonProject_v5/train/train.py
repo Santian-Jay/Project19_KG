@@ -88,7 +88,7 @@ def start_training():
 
     logger_init(args)
 
-    task_dir = args.task_dir   # 选择数据
+    task_dir = args.task_dir   # 
     loader = DataLoader(task_dir, args.N_1)
 
     n_ent, n_rel = loader.graph_size()
