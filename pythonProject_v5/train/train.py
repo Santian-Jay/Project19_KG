@@ -56,9 +56,9 @@ def start_training():
     torch.set_num_threads(5)
     warnings.filterwarnings("ignore", category=UserWarning)
 
-    print('开始训练')
+    print('start straining')
     # args.task_dir = '123456'
-    # task_dir = args.task_dir  # 选择数据
+    # task_dir = args.task_dir  # 
     # print(task_dir)
     with open('config.json', 'r+') as f:
         json_data = json.load(f)
