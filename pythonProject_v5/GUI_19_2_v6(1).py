@@ -388,10 +388,10 @@ def visualisation_window():
 
         # txt = Text(graphFrame, width=200, height=300)
         txt = Text(graphFrame, width=260, height=220)
-        txt.config(yscrollcommand=scroll_bar.set)  # 在Text组件中使用这个滚动条
+        txt.config(yscrollcommand=scroll_bar.set)  #
         txt.pack()
 
-        scroll_bar.config(command=txt.yview)  # 让这个滚动条发挥作用
+        scroll_bar.config(command=txt.yview)  #
 
         images = glob.glob('subgraph_images/*.png')
         images = [ImageTk.PhotoImage(Image.open(photo)) for photo in images]
@@ -410,10 +410,10 @@ def visualisation_window():
         #
         # # txt = Text(graphFrame, width=200, height=300)
         # txt = Text(graphFrame, width=260, height=220)
-        # txt.config(yscrollcommand=scroll_bar.set)  # 在Text组件中使用这个滚动条
+        # txt.config(yscrollcommand=scroll_bar.set)  #
         # txt.pack()
         #
-        # scroll_bar.config(command=txt.yview)  # 让这个滚动条发挥作用
+        # scroll_bar.config(command=txt.yview)  #
         #
         # images = glob.glob('subgraph_images/*.png')
         # images = [ImageTk.PhotoImage(Image.open(photo)) for photo in images]
@@ -653,8 +653,8 @@ def visualisation_window():
         style_value = ttk.Style()
         style_value.configure("Text", rowheight=60, font=f1)
 
-        r_scroll_bar.config(command=cate_text_view.yview)  # 绑定
-        b_scroll_bar.config(command=cate_text_view.xview)  # 绑定
+        r_scroll_bar.config(command=cate_text_view.yview)  #
+        b_scroll_bar.config(command=cate_text_view.xview)  #
 
     # category base view
     def create_base_tree_view():
