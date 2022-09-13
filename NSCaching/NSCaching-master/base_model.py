@@ -32,9 +32,10 @@ class BaseModel(object):
         self.weight_decay = args.lamb * args.n_batch / args.n_train
         self.time_tot = 0
         self.args = args
-
+        self.unique_time = ''
 
     def save(self, filename):
+        print('filename: ', filename)
         torch.save(self.model.state_dict(), filename)
 
     def load(self, filename):
@@ -191,7 +192,7 @@ class BaseModel(object):
         n_batch = self.args.n_batch
         best_mrr = 0
         best_str = ''
-
+        self.unique_time = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
         for epoch in range(n_epoch):
             start = time.time()
 
@@ -205,7 +206,10 @@ class BaseModel(object):
             epoch_loss = 0
 
             if self.args.save and epoch==self.args.s_epoch:
-                self.save(os.path.join(self.args.task_dir, self.args.model + '.mdl'))
+                # temp = self.unique_time + '-' + self.args.model + '.mdl'
+                print('test: ', os.path.join(self.args.task_dir, (self.unique_time + '_' + self.args.model + '.mdl')))
+                self.save(os.path.join(self.args.task_dir, self.unique_time + '_' + self.args.model + '.mdl'))
+                # self.save(self.args.task_dir + "\\" + self.unique_time + '_' + self.args.model + '.mdl')
 
             for h, t, r, h_idx, t_idx in batch_by_size(n_batch, head, tail, rela, head_idx, tail_idx, n_sample=n_train):
                 self.model.zero_grad()

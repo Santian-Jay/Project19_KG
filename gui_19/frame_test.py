@@ -1,24 +1,23 @@
 import tkinter as tk
 
-# if __name__ == '__main__':
-#     root = tk.Tk()
-#     root.geometry("600x600")
-#
-#     framea = tk.Frame(root, height=130,  bg='blue')
-#     framea.pack(side='top', fill='x', ipadx=10, ipady=10, expand=0)
-#
-#     frameb = tk.Frame(root, bg='green')
-#     frameb.pack(side='top', fill='both', ipadx=10, ipady=10, expand=True)
-#
-#     framec = tk.Frame(framea, height=60,  bg='gray')
-#     framec.pack(side='top', fill='x', ipadx=10, ipady=10, expand=0)
-#
-#     framed = tk.Frame(framea, bg='yellow')
-#     framed.pack(side='top', fill='x', ipadx=10, ipady=10, expand=True)
-#
-#     tk.Button(root, text='Select Files').place(x=0, y=0, width=200, height=50)
-#
-#     root.mainloop()
+if __name__ == '__main__':
+    root = tk.Tk()
+    root.geometry("600x600")
+
+    framea = tk.Frame(root, height=130,  bg='blue')
+    framea.pack(side='top', fill='x', ipadx=10, ipady=10, expand=0)
+
+    frameb = tk.Frame(root, bg='green')
+    frameb.pack(side='top', fill='both', ipadx=10, ipady=10, expand=True)
+
+    framec = tk.Frame(framea, height=60,  bg='gray')
+    framec.pack(side='top', fill='x', ipadx=10, ipady=10, expand=0)
+
+    framed = tk.Frame(framea, bg='yellow')
+    framed.pack(side='top', fill='x', ipadx=10, ipady=10, expand=True)
+
+    tk.Button(root, text='Select Files').place(x=0, y=0, width=200, height=50)
+    root.mainloop()
 import numpy as np
 import matplotlib.mlab as mlab
 
@@ -125,46 +124,46 @@ import matplotlib.mlab as mlab
 # win.mainloop()
 
 
-import sys
-if sys.version_info.major == 3:
-    import tkinter as tk
-elif sys.version_info.major == 2:
-    import Tkinter as tk
-import random
-class DemoApplication(tk.Frame):
-    def on_checkbox_changed(self):
-        if self.check_box_var1.get()==1 and self.check_box_var2.get()==1:
-            main_win.title(u"都被选中了")
-        elif self.check_box_var1.get():
-            main_win.title(u"C 被选中了")
-        elif self.check_box_var2.get():
-            main_win.title(u"Python 被选中了")
-        else:
-            main_win.title(u"都没有被选中")
-    def createWidgets(self):
-        self.check_box_var1 = tk.IntVar()
-        self.check_box_var2 = tk.IntVar()
-        # 创建一个多选框
-        self.check_box1 = tk.Checkbutton(main_win,
-                                       text=u'C',
-                                       variable = self.check_box_var1,
-                                       onvalue = 1,
-                                       offvalue = 0,
-                                       command=self.on_checkbox_changed)
-        self.check_box1.pack()
-        # 创建一个多选框
-        self.check_box2 = tk.Checkbutton(main_win,
-                                       text=u'Python',
-                                       variable = self.check_box_var2,
-                                       onvalue = 1,
-                                       offvalue = 0,
-                                       command=self.on_checkbox_changed)
-        self.check_box2.pack()
-    def __init__(self, master=None):
-        tk.Frame.__init__(self, master)
-        self.createWidgets()
-main_win = tk.Tk()
-main_win.title(u"多选框演示")
-main_win.geometry("300x100")
-app = DemoApplication(master=main_win)
-app.mainloop()
+# import sys
+# if sys.version_info.major == 3:
+#     import tkinter as tk
+# elif sys.version_info.major == 2:
+#     import Tkinter as tk
+# import random
+# class DemoApplication(tk.Frame):
+#     def on_checkbox_changed(self):
+#         if self.check_box_var1.get()==1 and self.check_box_var2.get()==1:
+#             main_win.title(u"都被选中了")
+#         elif self.check_box_var1.get():
+#             main_win.title(u"C 被选中了")
+#         elif self.check_box_var2.get():
+#             main_win.title(u"Python 被选中了")
+#         else:
+#             main_win.title(u"都没有被选中")
+#     def createWidgets(self):
+#         self.check_box_var1 = tk.IntVar()
+#         self.check_box_var2 = tk.IntVar()
+#         # 创建一个多选框
+#         self.check_box1 = tk.Checkbutton(main_win,
+#                                        text=u'C',
+#                                        variable = self.check_box_var1,
+#                                        onvalue = 1,
+#                                        offvalue = 0,
+#                                        command=self.on_checkbox_changed)
+#         self.check_box1.pack()
+#         # 创建一个多选框
+#         self.check_box2 = tk.Checkbutton(main_win,
+#                                        text=u'Python',
+#                                        variable = self.check_box_var2,
+#                                        onvalue = 1,
+#                                        offvalue = 0,
+#                                        command=self.on_checkbox_changed)
+#         self.check_box2.pack()
+#     def __init__(self, master=None):
+#         tk.Frame.__init__(self, master)
+#         self.createWidgets()
+# main_win = tk.Tk()
+# main_win.title(u"多选框演示")
+# main_win.geometry("300x100")
+# app = DemoApplication(master=main_win)
+# app.mainloop()

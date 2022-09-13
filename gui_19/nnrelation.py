@@ -16,7 +16,7 @@ def nn_categorization(new_train):
 	# triple = open("subgraph_v1/train2id.txt", "r")
 	# valid = open("dataset/valid2id.txt", "r")
 	# test = open("dataset/test2id.txt", "r")
-	triple = open("dataset/train2id.txt", "r", encoding='UTF-8')
+	triple = open("dataset/YAGO3-10/train2id.txt", "r", encoding='UTF-8')
 	tot = (int)(triple.readline())
 
 	print(tot)
@@ -115,7 +115,7 @@ def nn_categorization(new_train):
 	s1n=0
 	sn1=0
 	snn=0
-	f = open("dataset/train2id.txt", "r", encoding='UTF-8')
+	f = open("dataset/YAGO3-10/train2id.txt", "r", encoding='UTF-8')
 	tot = (int)(f.readline())
 	for i in range(tot):
 		content = f.readline()
@@ -133,7 +133,7 @@ def nn_categorization(new_train):
 	f.close()
 
 	# used code
-	f = open("dataset/train2id.txt", "r", encoding='UTF-8')
+	f = open("dataset/YAGO3-10/train2id.txt", "r", encoding='UTF-8')
 	f11 = open("dataset/1-1.txt", "w", encoding='UTF-8')
 	f1n = open("dataset/1-n.txt", "w", encoding='UTF-8')
 	fn1 = open("dataset/n-1.txt", "w", encoding='UTF-8')

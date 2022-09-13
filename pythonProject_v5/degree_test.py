@@ -13,11 +13,9 @@ class Degree:
     def get_result(self):
         return self.in_ave, self.out_ave
 
-    def create_degree(self):  # 可以改为接受两个参数，一个entity，一个triad
+    def create_degree(self):  # 可以改为接受两个参数，一个entity，一个trian
         file = open("dataset/entity2id.txt", 'r', encoding='UTF-8')
-
         n_entity = int(file.readline())
-
         for index in range(n_entity):
             content = file.readline()
             name, code = content.strip().split()
@@ -54,6 +52,7 @@ deg = Degree()
 
 if __name__ == '__main__':
     print('degree class')
+    print(deg.get_result())
 
 # file = open("dataset/entity2id.txt", 'r')
 # file2 = open("dataset/train2id.txt", 'r')

@@ -2,6 +2,7 @@ import torch
 import torch.nn.functional as F
 import torch.nn as nn
 
+
 class BaseModule(nn.Module):
     def __init__(self, n_ent, n_rel, args):
         super(BaseModule, self).__init__()
@@ -52,6 +53,13 @@ class BaseModule(nn.Module):
         p_score = torch.sum(logsigmoid(p_score))
         n_score = torch.sum(logsigmoid(-n_score))
         return - p_score - n_score
+
+    def ce_loss(self, head,tail, rela, n_head, n_tail):
+
+        c_score = torch.sum((-1 * self.forward(head, tail, rela)))
+        e_score=  torch.sum(torch.log(torch.exp( self.forward(n_head, n_tail, rela))))
+        return c_score+e_score
+
 
 class TransEModule(BaseModule):
     def __init__(self, n_ent, n_rel, args):

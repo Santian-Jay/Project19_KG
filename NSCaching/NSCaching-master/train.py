@@ -16,8 +16,8 @@ parser.add_argument('--sample', type=str, default='unif', help='sampling method 
 parser.add_argument('--update', type=str, default='IS', help='cache update method')
 parser.add_argument('--remove', type=bool, default=False, help='whether to remove false negative in cache periodically')
 parser.add_argument('--loss', type=str, default='point', help='loss function, pair_loss or  point_loss')  # Loss function
-parser.add_argument('--save', type=bool, default=False, help='whether save model')
-parser.add_argument('--s_epoch', type=int, default=1000, help='which epoch should be saved, only work when save=True')
+parser.add_argument('--save', type=bool, default=True, help='whether save model')
+parser.add_argument('--s_epoch', type=int, default=100, help='which epoch should be saved, only work when save=True')
 parser.add_argument('--load', type=bool, default=False, help='whether load from pretrain model')
 parser.add_argument('--optim', type=str, default='adam', help='optimization method')
 parser.add_argument('--margin', type=float, default=4.0, help='set margin value for pair loss')  # Margin

@@ -17,9 +17,9 @@ def get_data(file):
 
 
 # path of txt files
-entity = r'dataset\entity2id.txt'
-relate = r'dataset\relation2id.txt'
-train = r'dataset\train2id.txt'
+entity = r'../dataset/entity2id.txt'
+relate = r'../dataset/relation2id.txt'
+train = r'../dataset/train2id.txt'
 
 # txt to Dataframe
 pts = get_data(entity)

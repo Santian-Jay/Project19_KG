@@ -81,10 +81,10 @@ for train in new_train:
 # print("长度是{}", nodes)
 
 #useful code
-pos = nx.spring_layout(G, k=10)
-
+# pos = nx.spring_layout(G, k=10)
+pos = nx.circular_layout(G)
 # pos = nx.get_edge_attributes(G, 'pos')
-# nx.draw(G, pos, with_labels=True)
+nx.draw(G, pos, with_labels=True)
 # labels = {e: G.edges[e]['weight'] for e in G.edges}
 # nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
 
@@ -106,9 +106,9 @@ print("图的点共有：{}".format(nx.number_of_nodes(G)))    # print number of
 # print degree of node 10
 # print(G.degree('10'))
 
-degree = nx.degree_histogram(G)       # Get the sequence of degree distributions of all nodes in the graph
-x = range(len(degree))
-y = [z/float(sum(degree)) for z in degree]
+# degree = nx.degree_histogram(G)       # Get the sequence of degree distributions of all nodes in the graph
+# x = range(len(degree))
+# y = [z/float(sum(degree)) for z in degree]
 
 # plt.loglog(x, y, color='blue', linewidth=2)  # Plot the degree distribution curve on a log-log axis
 
@@ -131,18 +131,18 @@ y = [z/float(sum(degree)) for z in degree]
 # nx.draw(G, pos, with_labels=True)
 
 # print duplicate edges
-# ax = plt.gca()
-# for e in G.edges:
-#     ax.annotate("",
-#                 xy=pos[e[0]], xycoords='data',
-#                 xytext=pos[e[1]], textcoords='data',
-#                 arrowprops=dict(arrowstyle="-", color="0.5",
-#                                 shrinkA=5, shrinkB=5,
-#                                 patchA=None, patchB=None,
-#                                 connectionstyle="arc3, rad=rrr".replace('rrr', str(0.3*e[2])
-#                                                                         ),
-#                                 ),
-#                 )
+ax = plt.gca()
+for e in G.edges:
+    ax.annotate("",
+                xy=pos[e[0]], xycoords='data',
+                xytext=pos[e[1]], textcoords='data',
+                arrowprops=dict(arrowstyle="-", color="0.5",
+                                shrinkA=5, shrinkB=5,
+                                patchA=None, patchB=None,
+                                connectionstyle="arc3, rad=rrr".replace('rrr', str(0.3*e[2])
+                                                                        ),
+                                ),
+                )
 
 # As = nx.adjacency_matrix(G)
 # print(As)
@@ -193,7 +193,7 @@ def get_degree(graph, node):
     # print("node {} out degree： {}\n".format(node, arr_result[node][0]))  # out degree of specified node, if index include '0', then don't need -1
     # print("node {} in degree： {}".format(node, arr_result_1[0][node]))  # in degree of specified node
 
-get_degree(G, 10)
+# get_degree(G, 10)
 # -------------------------------------------------------------------------
 # add node
 # G.add_nodes_from([1, 2, 3, 4, 5])
@@ -215,7 +215,8 @@ get_degree(G, 10)
 # print(get_Degrees(G, 10))
 
 
-
+print(G.in_degree())
+print(G.out_degree())
 
 
 plt.show()

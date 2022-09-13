@@ -126,7 +126,7 @@ class TransDModule(BaseModule):
 
 class TransHModule(BaseModule):
     def __init__(self, n_ent, n_rel, args):
-        super(TransHModule, self).__init__()
+        super(TransHModule, self).__init__(n_ent, n_rel, args)
         self.rel_embed = nn.Embedding(n_rel, args.hidden_dim)
         self.ent_embed = nn.Embedding(n_ent, args.hidden_dim)
         self.proj_rel_embed = nn.Embedding(n_rel, args.hidden_dim)

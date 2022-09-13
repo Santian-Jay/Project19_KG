@@ -27,13 +27,13 @@ class Degree:
             f.write(json.dumps(json_data))
             f.truncate()
 
-        print(self.in_ave, self.out_ave, self.n_entity, self.n_relation, self.n_edge)
+        print(float('%.4f' % self.in_ave), float('%.4f' % self.out_ave), self.n_entity, self.n_relation, self.n_edge)
 
     def get_result(self):
         return self.in_ave, self.out_ave, self.n_entity, self.n_relation, self.n_edge, self.n_11, self.n_1n, self.n_n1, self.n_nn
 
-    def create_degree(self):  # 可以改为接受两个参数，一个entity，一个triad
-        file = open("dataset/entity2id.txt", 'r', encoding='UTF-8')
+    def create_degree(self):  # 可以改为接受两个参数，一个entity，一个train
+        file = open("dataset/YAGO3-10/entity2id.txt", 'r', encoding='UTF-8')
 
         n_entity = int(file.readline())
 
@@ -46,7 +46,7 @@ class Degree:
         return n_entity
 
     def count_degree(self):
-        file2 = open("dataset/train2id.txt", 'r', encoding='UTF-8')
+        file2 = open("dataset/YAGO3-10/train2id.txt", 'r', encoding='UTF-8')
         n_train = int(file2.readline())
         new_train = []
         for i in range(n_train):

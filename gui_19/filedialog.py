@@ -5,6 +5,7 @@ from tkinter import filedialog
 def select_file():
     global name
     selected_file_path = filedialog.askopenfilename()
+    print('selected_file_path: ', selected_file_path)
     filename.set(selected_file_path)
     name = filename.get()
     # print(name)

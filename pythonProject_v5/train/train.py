@@ -18,7 +18,7 @@ parser.add_argument('--sample', type=str, default='unif', help='sampling method 
 parser.add_argument('--update', type=str, default='IS', help='cache update method')
 parser.add_argument('--remove', type=bool, default=False, help='whether to remove false negative in cache periodically')
 parser.add_argument('--loss', type=str, default='point', help='loss function, pair_loss or  point_loss')  # Loss function
-parser.add_argument('--save', type=bool, default=False, help='whether save model')
+parser.add_argument('--save', type=bool, default=True, help='whether save model')
 parser.add_argument('--s_epoch', type=int, default=100, help='which epoch should be saved, only work when save=True') # 100
 parser.add_argument('--load', type=bool, default=False, help='whether load from pretrain model')
 parser.add_argument('--optim', type=str, default='adam', help='optimization method')
@@ -29,7 +29,7 @@ parser.add_argument('--temp', type=float, default=2.0, help='set temporature val
 parser.add_argument('--gpu', type=str, default='0', help='set gpu #')
 parser.add_argument('--p', type=int, default=1, help='set distance norm')
 parser.add_argument('--lr', type=float, default=0.0001, help='set learning rate')  # Learning rate
-parser.add_argument('--n_epoch', type=int, default=100, help='number of training epochs')  # 1000
+parser.add_argument('--n_epoch', type=int, default=1000, help='number of training epochs')  # 1000
 parser.add_argument('--n_batch', type=int, default=4096, help='number of batch size')  # Batch size
 parser.add_argument('--N_1', type=int, default=30, help='cache_size')
 parser.add_argument('--N_2', type=int, default=30, help='random subset size')
@@ -56,7 +56,7 @@ def start_training():
     torch.set_num_threads(5)
     warnings.filterwarnings("ignore", category=UserWarning)
 
-    print('开始训练')
+    print('start training')
     # args.task_dir = '123456'
     # task_dir = args.task_dir  # 选择数据
     # print(task_dir)
@@ -117,12 +117,13 @@ def start_training():
     model = BaseModel(n_ent, n_rel, args)
 
 
-    best_str, graph_list = model.train(train_data, caches, corrupter, tester_val, tester_tst)
+    best_str, graph_list, total_time = model.train(train_data, caches, corrupter, tester_val, tester_tst)
     print(graph_list)
     with open(args.perf_file, 'a') as f:
         print('Training finished and best performance:', best_str)
         f.write('best_performance: '+best_str)
         f.truncate()
-    return graph_list
+    return graph_list, total_time
+
 
 

@@ -31,10 +31,10 @@ relatesDic = {}
 entityDic = {}
 neighborNode = {}
 
-# entity = r'./dataset/YAGO3-10/entity2id.txt'
-# relate = r'./dataset/YAGO3-10/relation2id.txt'
-entity = r'./dataset/entity2id.txt'
-relate = r'./dataset/relation2id.txt'
+entity = r'./dataset/YAGO3-10/entity2id.txt'
+relate = r'./dataset/YAGO3-10/relation2id.txt'
+# entity = r'./dataset/entity2id.txt'
+# relate = r'./dataset/relation2id.txt'
 
 def get_relate(file):
     with open(file, 'r', encoding='UTF-8') as f:
@@ -92,10 +92,11 @@ def addEdge(a, b):
     edgeLinks[b].add(a)
     in_degree[b] += 1
     out_degree[a] += 1
-file = open("dataset/train2id.txt", "r", encoding='UTF-8')
+file = open("dataset/YAGO3-10/train2id.txt", "r", encoding='UTF-8')
 
 entryNumber = (int)(file.readline())
-G = nx.path_graph(1)
+print('entryNumber', entryNumber)
+G = nx.path_graph(0)
 for index in range(entryNumber):
     content = file.readline()
     head, tile, relation = content.strip().split()
@@ -103,7 +104,7 @@ for index in range(entryNumber):
     nx.add_path(G, [int(head), int(tile)])
     addEdge(int(head), int(tile))
 
-
+print('number_of_edges', nx.number_of_edges(G))
 a = {}
 
 

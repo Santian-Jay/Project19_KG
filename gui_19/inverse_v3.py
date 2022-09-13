@@ -1,21 +1,19 @@
 relationWithHT = {}
 inverse = {}
-
 strIndex = []
 threshold = 0.95
 total = {}
 
 
-def checkRepeat(list1, list2):
-    isIn = False
-    for i in range(len(inverse)):
-        if list1 == inverse[i] or list2 == inverse[i]:
-            isIn = True
-    return isIn
+# def checkRepeat(list1, list2):
+#     isIn = False
+#     for i in range(len(inverse)):
+#         if list1 == inverse[i] or list2 == inverse[i]:
+#             isIn = True
+#     return isIn
 
 
 class Inverse:
-
     def __init__(self):
         # super().__init__()
         self.inverse_func()
@@ -44,6 +42,7 @@ class Inverse:
         hash_table = {}
         inverseIndex = []
         index = 0
+
         for key, row in enumerate(relationWithHT):
             for item in relationWithHT[row]:
                 new_tuple = (key, item[0], item[1])
@@ -52,13 +51,10 @@ class Inverse:
         for item in hash_table:
             for i in range(len(relationWithHT)):
                 if (i, item[2], item[1]) in hash_table and i != item[0]:
-                    # print("%d and %d has inverse" % (item[0], i))
-                    # print((item[1], item[2]))
                     if (strIndex[item[0]], strIndex[i]) in relation_map:
                         relation_map[(strIndex[item[0]], strIndex[i])].append((item[1], item[2]))
                         total[strIndex[i]] += 1
                         total[strIndex[item[0]]] += 1
-                        # inverseIndex += 1
                         if (strIndex[item[0]], strIndex[i]) not in inverseIndex:
                             inverseIndex.append((strIndex[item[0]], strIndex[i]))
                     else:
@@ -67,14 +63,13 @@ class Inverse:
                             relation_map[(strIndex[item[0]], strIndex[i])].append((item[1], item[2]))
                             total[strIndex[i]] += 1
                             total[strIndex[item[0]]] += 1
-                            # inverseIndex += 1
                             if (strIndex[item[0]], strIndex[i]) not in inverseIndex:
                                 inverseIndex.append((strIndex[item[0]], strIndex[i]))
 
-        print(relation_map)
-        print(inverse)
-        print('total is: ', total)
-        print(inverseIndex)
+        # print(relation_map)
+        # print(inverse)
+        # print('total is: ', total)
+        # print(inverseIndex)
 
         fInverse = open("inverse_v1.txt", "w")
         fInverse.write("%d\n" % (len(relation_map)))
@@ -84,7 +79,7 @@ class Inverse:
             t = inverseIndex[n][1]
             hRate = total[h] / len(relationWithHT[h])
             tRate = total[t] / len(relationWithHT[t])
-            print(hRate, tRate)
+            # print(hRate, tRate)
             fInverse.write("%s\t%s\n" % (h, t))
             if hRate >= threshold and tRate >= threshold:
                 print("relation {} and {} can be inverse".format(h, t))

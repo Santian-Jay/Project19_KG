@@ -1,9 +1,9 @@
-# -*- encoding=utf-8 -*-
-# import tkinter
-# from tkinter import *
-# from tkinter import ttk
-#
-#
+
+import tkinter
+from tkinter import *
+from tkinter import ttk
+
+
 # def choose(event):
 #     # 选中事件
 #     print('选中的数据:{}'.format(combobox.get()))

@@ -35,6 +35,7 @@ class BaseModel(object):
 
 
     def save(self, filename):
+        print('filename: ', filename)
         torch.save(self.model.state_dict(), filename)
 
     def load(self, filename):
@@ -205,6 +206,7 @@ class BaseModel(object):
             epoch_loss = 0
 
             if self.args.save and epoch==self.args.s_epoch:
+                print('args.task_dir: ', self.args.task_dir)
                 self.save(os.path.join(self.args.task_dir, self.args.model + '.mdl'))
 
             for h, t, r, h_idx, t_idx in batch_by_size(n_batch, head, tail, rela, head_idx, tail_idx, n_sample=n_train):

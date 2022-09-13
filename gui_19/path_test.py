@@ -180,131 +180,138 @@ def Sign():
 
 # print(allRoutes)
 # print(all_shortest_path[(0, 4)])
-# for p in nx.all_shortest_paths(G, source=0, target=4):
+for p in nx.all_shortest_paths(G, source=7, target=3):
+    print(p)
+list_1 = list(G.neighbors(8))
+print(list_1)
 #     allRoutes.append(p)
 #     create_path(p)
 # print(temp1)
 # print(allRoutes)
 # print(len(all_shortest_path[(0, 4)]))
 
-# print('计算图中节点%d到节点%d的所有最短路径: %s' % (0, 4, [p for p in nx.all_shortest_paths(G, source=0, target=4)]))
-a = {}
+# for path in nx.shortest_simple_paths(G, 4, 5):
+#     print(path)
+# print('计算图中节点%d到节点%d的所有最短路径: %s' % (0, 4, [p for p in nx.all_shortest_paths(G, source=4, target=5)]))
+# a = {}
 # print('all_simple_edge_paths')
-# # for path in sorted(nx.all_simple_edge_paths(G, 0, 4)):
-# for path in nx.all_simple_edge_paths(G, 0, 4):
+
+
+# for path in sorted(nx.all_simple_edge_paths(G, 0, 4)):
+# for path in nx.all_simple_edge_paths(G, 4, 5):
 #     print(path)
-#     a.append(path)
+    # a.append(path)
 
 
 
 # print('all_simple_paths')
 # print('all_simple_paths')
-# for path in nx.all_simple_paths(G, 0, 4):
+# for path in nx.all_simple_paths(G, 4, 5):
 #     print(path)
 
-print('shortest_simple_paths')
-if nx.has_path(G, 3, 5):
-    for path in nx.shortest_simple_paths(G, 3, 5):
-        print(path)
-        if path[1] not in a:
-            if len(a) < 5:
-                a[path[1]] = []
-                a[path[1]].append(path)
-            else:
-                break
-    length = 0
-    for item in a:
-        length = length + len(a[item])
-    if length < 5 and len(a) < 5:
-        for path in nx.shortest_simple_paths(G, 3, 5):
-            if len(a) < 5:
-                for i in a:
-                    if path != a[i][0]:
-                        if i == path[1]:
-                            if length < 5:
-                                a[path[1]].append(path)
-                            for item in a:
-                                length = length + len(a[item])
-                            break
-
-graphList = []
-# for i in range(5):
+# print('shortest_simple_paths')
+# if nx.has_path(G, 3, 5):
+#     for path in nx.shortest_simple_paths(G, 3, 5):
+#         print(path)
+#         if path[1] not in a:
+#             if len(a) < 5:
+#                 a[path[1]] = []
+#                 a[path[1]].append(path)
+#             else:
+#                 break
+#     length = 0
+#     for item in a:
+#         length = length + len(a[item])
+#     if length < 5 and len(a) < 5:
+#         for path in nx.shortest_simple_paths(G, 3, 5):
+#             if len(a) < 5:
+#                 for i in a:
+#                     if path != a[i][0]:
+#                         if i == path[1]:
+#                             if length < 5:
+#                                 a[path[1]].append(path)
+#                             for item in a:
+#                                 length = length + len(a[item])
+#                             break
+#
+# graphList = []
+# # for i in range(5):
+# #     sub_graph = nx.MultiDiGraph()
+# #     graphList.append(sub_graph)
+#
+# for p in a:
 #     sub_graph = nx.MultiDiGraph()
 #     graphList.append(sub_graph)
-
-for p in a:
-    sub_graph = nx.MultiDiGraph()
-    graphList.append(sub_graph)
-    if len(a[p]) > 1:
-        for item in a[p]:
-            all_sub.append(create_path(sub_graph, item))
-    else:
-        all_sub.append(create_path(sub_graph, a[p][0]))
-
-
-
-print('neighbor: ', neighborNode)
-# for p in a:
 #     if len(a[p]) > 1:
 #         for item in a[p]:
-#             all_sub.append(create_path(item))
+#             all_sub.append(create_path(sub_graph, item))
 #     else:
-#         # print('current path is: ', a[path])
-#         # temp2 = create_path(a[p][0])
-#         all_sub.append(create_path(a[p][0]))
-#         # print(create_path(a[p][0]))
-
-
-    # print(path)
-# for i in all_shortest_path:
-#     print(i[0])
-# for p in allRoutes:
-#     if ()
-print(len(a))
-print(a)
-print('all path')
-print(all_sub)
-# print(big_dic)
-
-
-
-
-
-def draw_sub(sub, index):
-    old_attrs = nx.get_edge_attributes(sub, 'weight')
-    attrs = {}
-    for k, v in old_attrs.items():
-         attrs[(k[0], k[1])] = v
-    # rs == relationship
-    # for key, value in attrs.items():
-    #     attrs[key] = replace_relate(value)
-    pos = nx.circular_layout(sub)
-    # node
-    plt.figure(dpi=160, figsize=(12, 8))
-    nx.draw_networkx_nodes(sub, pos, node_size=400, node_color='#6495ED')
-    label_options = {"ec": "k", "fc": "white", "alpha": 0.5}
-    nx.draw_networkx_labels(sub, pos, font_size=10, bbox=label_options)
-    # edge
-    nx.draw_networkx_edges(sub, pos)
-
-    nx.draw_networkx_edge_labels(sub, pos, edge_labels=attrs)
-    plt.axis('off')
-    save_path = 'subgraph_images/picture-{}.png'.format(index + 1)
-    plt.savefig(save_path)
-
-
-
-for g in range(len(all_sub)):
-    for i in all_sub[g]:
-        reverse = tuple(reversed(i))
-        if i not in big_dic:
-            r = big_dic[reverse]
-            graphList[g].add_edge(entityDic[reverse[0]], entityDic[reverse[1]], weight=relatesDic[r])
-        else:
-            r = big_dic[i]
-            graphList[g].add_edge(entityDic[i[0]], entityDic[i[1]], weight=relatesDic[r])
-            # graphList[g].add_edge(i[0], i[1], weight=relatesDic[r])
-    draw_sub(graphList[g], g)
+#         all_sub.append(create_path(sub_graph, a[p][0]))
+#
+#
+#
+# print('neighbor: ', neighborNode)
+# # for p in a:
+# #     if len(a[p]) > 1:
+# #         for item in a[p]:
+# #             all_sub.append(create_path(item))
+# #     else:
+# #         # print('current path is: ', a[path])
+# #         # temp2 = create_path(a[p][0])
+# #         all_sub.append(create_path(a[p][0]))
+# #         # print(create_path(a[p][0]))
+#
+#
+#     # print(path)
+# # for i in all_shortest_path:
+# #     print(i[0])
+# # for p in allRoutes:
+# #     if ()
+# print(len(a))
+# print(a)
+# print('all path')
+# print(all_sub)
+# # print(big_dic)
+#
+#
+#
+#
+#
+# def draw_sub(sub, index):
+#     old_attrs = nx.get_edge_attributes(sub, 'weight')
+#     attrs = {}
+#     for k, v in old_attrs.items():
+#          attrs[(k[0], k[1])] = v
+#     # rs == relationship
+#     # for key, value in attrs.items():
+#     #     attrs[key] = replace_relate(value)
+#     pos = nx.circular_layout(sub)
+#     # node
+#     plt.figure(dpi=160, figsize=(12, 8))
+#     nx.draw_networkx_nodes(sub, pos, node_size=400, node_color='#6495ED')
+#     label_options = {"ec": "k", "fc": "white", "alpha": 0.5}
+#     nx.draw_networkx_labels(sub, pos, font_size=10, bbox=label_options)
+#     # edge
+#     nx.draw_networkx_edges(sub, pos)
+#
+#     nx.draw_networkx_edge_labels(sub, pos, edge_labels=attrs)
+#     plt.axis('off')
+#     save_path = 'subgraph_images/picture-{}.png'.format(index + 1)
+#     plt.savefig(save_path)
+#
+#
+#
+# for g in range(len(all_sub)):
+#     for i in all_sub[g]:
+#         reverse = tuple(reversed(i))
+#         if i not in big_dic:
+#             r = big_dic[reverse]
+#             graphList[g].add_edge(entityDic[reverse[0]], entityDic[reverse[1]], weight=relatesDic[r])
+#         else:
+#             r = big_dic[i]
+#             graphList[g].add_edge(entityDic[i[0]], entityDic[i[1]], weight=relatesDic[r])
+#             # graphList[g].add_edge(i[0], i[1], weight=relatesDic[r])
+#     draw_sub(graphList[g], g)
 
 
 
