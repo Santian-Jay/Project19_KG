@@ -3,7 +3,10 @@ from tkinter import Frame
 import pandas as pd
 import seaborn as sns
 import networkx as nx
-import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('TKAgg')
+from matplotlib import pyplot as plt
+# import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 

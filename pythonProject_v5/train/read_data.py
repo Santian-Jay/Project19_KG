@@ -9,6 +9,7 @@ class DataLoader:
         self.n_sample = n_sample
 
         print("The toolkit is importing datasets.\n")
+        print(os.path.join(self.inPath, "relation2id.txt"))
         with open(os.path.join(self.inPath, "relation2id.txt")) as f:
             tmp = f.readline()
             self.n_rel = int(tmp.strip())

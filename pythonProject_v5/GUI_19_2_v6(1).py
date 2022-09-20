@@ -1,4 +1,6 @@
+import datetime
 import shutil
+import time
 import tkinter as tk
 # import mttkinter as tk
 from mttkinter import *
@@ -17,7 +19,10 @@ import nnrelation
 import db_conn
 from degree_test_v2 import deg
 from PIL import Image, ImageTk
-import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('TKAgg')
+from matplotlib import pyplot as plt
+# import matplotlib.pyplot as plt
 from pythonProject_v5.Check_Box import Checkbar
 import network1
 import json
@@ -29,6 +34,7 @@ from pythonProject_v5.Entry_class import Entry_new
 from pythonProject_v5.path_test_v5 import subgraph_extra
 import threading
 import re
+import reminder_box
 import ttkbootstrap
 
 # ====================================global variables==============================================
@@ -231,6 +237,7 @@ def visualisation_window():
     f2 = tkFont.Font(family='microsoft yahei', size=16, weight='bold')
     f3 = tkFont.Font(family='times', size=18, slant='italic', weight='bold')
     global subgraphs_rendered
+    cate_tree_view = ttk.Treeview()
 
     subgraphs_rendered = 0
     txt = Text()
@@ -744,6 +751,7 @@ def visualisation_window():
         mb.place(x=0, y=0, width=1597, height=40)
         image_label = tk.Label(resultFrame)
         image_label.pack()
+        float_treeview_list = []
         # global selectMargin, selectLamb
 
         def choose(event):
@@ -803,8 +811,8 @@ def visualisation_window():
         def margin():
             margin_result = selectMargin.get()
             print(margin_result)
-            # return selectMargin.get()
-            return margin_text.get()
+            return selectMargin.get()
+            #return margin_text.get()
         # pair set default[2, 4, 6, 8], sigmoid set default[4, 8, 12, 16, 20, 24]
         # select_margin = ["0", "4", "8", "12", "16", "24"]
         select_margin = '2, 4, 6, 8'
@@ -827,8 +835,8 @@ def visualisation_window():
 
         def lamb():
             lamb_result = selected_lamb.get()
-            # return selected_lamb.get()
             return selected_lamb.get()
+            #return selected_lamb.get()
         # 'DistMult', 'ComplEx', 'SimplE' use point function, lamb default:[0.1, 01, 0.001]
         select_lamb = '0.1, 0.01, 0.001'
         selected_lamb = StringVar(window)
@@ -848,8 +856,8 @@ def visualisation_window():
         def bernoulli():
             bernoulli_result = selected_Bernoulli.get()
             print(bernoulli_result)
-            # return selectBernoulli.get()
-            return selected_Bernoulli.get()
+            return selectBernoulli.get()
+            #return selected_Bernoulli.get()
 
         BernoulliLabel = Label(optionsFrame, text='Select Bernoulli', font=f1, bg="#f7f3f2", anchor='w')
         BernoulliLabel.place(x=18, y=108, width=230, height=30)
@@ -869,8 +877,8 @@ def visualisation_window():
 
         def learning_rate():
             learning_rate_result = selected_learning_rate.get()
-            # return selectLearning_rate.get()
-            return selected_learning_rate.get()
+            return selectLearning_rate.get()
+            #return selected_learning_rate.get()
 
         LearningRateLabel = Label(optionsFrame, text='Learning Rate', font=f1, bg="#f7f3f2", anchor='w')
         LearningRateLabel.place(x=268, y=108, width=230, height=30)
@@ -890,8 +898,8 @@ def visualisation_window():
 
         def batch_size():
             batch_size_result = selected_batch_size.get()
-            #return selectBatch_size.get()
-            return selected_batch_size.get()
+            return selectBatch_size.get()
+            #return selected_batch_size.get()
 
         BatchSizeLabel = Label(optionsFrame, text='Batch Size', font=f1, bg="#f7f3f2", anchor='w')
         BatchSizeLabel.place(x=548, y=108, width=230, height=30)
@@ -950,8 +958,8 @@ def visualisation_window():
 
         def negative_sample_no():
             negative_sample_no_result = selected_negative_sample_no.get()
-            #return selectNegative_sample_no.get()
-            return selected_negative_sample_no.get()
+            return selectNegative_sample_no.get()
+            #return selected_negative_sample_no.get()
 
         NegativeSampleLabel = Label(optionsFrame, text='Number of Negative Samples', font=f1, bg="#f7f3f2",
                                     anchor='w')
@@ -969,44 +977,137 @@ def visualisation_window():
         selectNegative_sample_no.insert(0, select_negative_sample_no)
         selectNegative_sample_no.place(x=550, y=200, width=310, height=30)
 
+        def _get_parameters_list():
+            TrainingButton.configure(state='disabled')
+            T1 = threading.Thread(target=get_parameters_list)
+            # T1.setDaemon(True)
+            T1.start()
+
+        def _create_float_window():
+            T3 = threading.Thread(target=create_float_window)
+            T3.start()
+        def create_float_window():
+            top_level = Toplevel(window)
+            top_level.title('training...')
+            top_level.geometry('600x400+1000+500')
+            top_level.overrideredirect(True)
+            Label(top_level, anchor='center', font=f1, text='Training...').pack()
+            time.sleep(2)
+            top_level.destroy()
+
+        def create_result_float_window(data_list):
+            top_level_result = Toplevel(window)
+            top_level_result.title('training finished')
+            top_level_result.geometry('1200x800+1000+500')
+            # right scrollbar
+            h_r_scroll_bar = Scrollbar(top_level_result)
+            h_r_scroll_bar.pack(side=RIGHT, fill=Y)
+
+            h_b_scroll_bar = Scrollbar(top_level_result, orient=HORIZONTAL)
+            h_b_scroll_bar.pack(side=BOTTOM, fill=X)
+
+            # historyColumns = ('Time', 'Params', 'Performance', 'File')
+            historyColumns = ('Time', 'Params', 'Performance')
+            result_tree_view = ttk.Treeview(top_level_result, show='headings', columns=historyColumns,
+                                          yscrollcommand=h_r_scroll_bar.set, xscrollcommand=h_b_scroll_bar.set)
+            result_tree_view.column('Time', width=100, anchor='w')
+            result_tree_view.column('Params', width=400, anchor='w')
+            result_tree_view.column('Performance', width=400, anchor='center')
+            # cate_tree_view.column('File', width=60, anchor='center')
+
+            result_tree_view.heading('Time', text='Time')
+            result_tree_view.heading('Params', text='Parameter Content')
+            result_tree_view.heading('Performance', text='Best Performance')
+            # cate_tree_view.heading('File', text='Trained Model')
+            result_tree_view.pack(fill='both', expand=True)
+
+            h_b_scroll_bar.config(command=result_tree_view.xview)
+            h_r_scroll_bar.config(command=result_tree_view.yview)
+
+            style_value = ttk.Style()
+            style_value.configure("Treeview", rowheight=50, font=f1)
+
+            result_tree_view.tag_configure('oddrow', background='white')
+            result_tree_view.tag_configure('evenrow', background='lightblue')
+            count = 0
+            max_mrr = 0
+            for jd in data_list:
+                if jd['Index'] >= max_mrr:
+                    max_mrr = jd['Index']
+                if count % 2 == 0:
+                    result_tree_view.insert('', index=4, values=(
+                        jd['Time'], jd['Hyper_Params'], jd['Best_Perfor']
+                    ), tags='evenrow')
+                else:
+                    result_tree_view.insert('', index=4, values=(
+                        jd['Time'], jd['Hyper_Params'], jd['Best_Perfor']
+                    ), tags='oddrow')
+                count += 1
+
+            print(max_mrr)
+
 
         def get_parameters_list():
+            _create_float_window()
+            global cate_tree_view
             bernoulli_list = bernoulli()
-            # ber_list = bernoulli_list.strip().split(',')
-            ber_list = re.split(', | ', bernoulli_list)
+            ber_list = re.split(', | | ,|,', bernoulli_list)
             ber_list = list(set(ber_list))
             if '' in ber_list:
                 ber_list.remove('')
+
             lr_list_str = learning_rate()
-            # lr_list_float = lr_list_str.strip().split(',')
-            lr_list_float = re.split(', | ', lr_list_str)
+            lr_list_float = re.split(', | | ,|,', lr_list_str)
             lr_list_float = list(set(lr_list_float))
             if '' in lr_list_float:
                 lr_list_float.remove('')
+            lr_list_float = sorted(lr_list_float)
             bs_list_str = batch_size()
-            # bs_list_int = bs_list_str.strip().split(',')
-            bs_list_int = re.split(', | ', bs_list_str)
+            bs_list_int = re.split(', | | ,|,', bs_list_str)
             bs_list_int = list(set(bs_list_int))
             if '' in bs_list_int:
                 bs_list_int.remove('')
+            bs_list_int = sorted(bs_list_int)
             ns_list_str = negative_sample_no()
-            # ns_list_int = ns_list_str.strip().split(',')
-            ns_list_int = re.split(', | ', ns_list_str)
+            ns_list_int = re.split(', | | ,|,', ns_list_str)
             ns_list_int = list(set(ns_list_int))
             if '' in ns_list_int:
                 ns_list_int.remove('')
+            ns_list_int = sorted(ns_list_int)
             margin_list_str = margin()
-            # margin_list_int = margin_list_str.strip().split(',')
-            margin_list_int = re.split(', | ', margin_list_str)
+            margin_list_int = re.split(', | | ,|,', margin_list_str)
             margin_list_int = list(set(margin_list_int))
             if '' in margin_list_int:
                 margin_list_int.remove('')
-
-
+            margin_list_int = sorted(margin_list_int)
 
             para_list = [(a, b, c, d, e) for a in ber_list for b in lr_list_float for c in bs_list_int for d in ns_list_int for e in margin_list_int]
             print(para_list)
             print(len(para_list))
+
+            for t in range(len(para_list)):
+                with open('config.json', 'r+') as f:
+                    json_data = json.load(f)
+                    json_data['Models'] = select_model()
+                    json_data['Bern'] = para_list[t][0]
+                    json_data['Lr'] = float(para_list[t][1])
+                    json_data['N_batch'] = int(para_list[t][2])
+                    json_data['N_Ns'] = int(para_list[t][3])
+                    if select_model() not in ['TransE', 'TransD', 'TransH']:
+                        json_data['Lamb'] = float(para_list[t][4])
+                    else:
+                        json_data['Margin'] = int(para_list[t][4])
+                    json_data['Ns'] = negative_sampling()
+                    json_data['Loss'] = loss_function()
+                    f.seek(0)
+                    f.write(json.dumps(json_data))
+                    f.truncate()
+                _train(t, para_list)
+            print('11111')
+            print(float_treeview_list)
+            create_result_float_window(float_treeview_list)
+                # T = threading.Thread(target=_train)
+                # T.start()
 
         # get_parameters_list()
 
@@ -1078,17 +1179,32 @@ def visualisation_window():
                 f1.write(json.dumps(json_data))
                 f1.truncate()
 
-        def _train():
-            print_config()
+        def _train(p_index, para_list):
+            # global para_list
+            # print_config()
             graph_data, total_time = start_training()
             set_data(graph_data)
-            temp_str = 'lf: ' + loss_function() + ', ns: ' + negative_sampling() + ', b: ' + bernoulli() + ', lr: ' \
-                       + learning_rate() + ', bs: ' + batch_size() + ', magin: ' + margin() + ', lamb: ' + lamb() + ', nns: ' + negative_sample_no()
+            # graph_data = [0.675, 2.2, 0.5, 0.8, 1.0]
+            # total_time = '2022-09-18_21-23-31'
+            # temp_str = 'lf: ' + loss_function() + ', ns: ' + negative_sampling() + ', b: ' + bernoulli() + ', lr: ' \
+            #            + learning_rate() + ', bs: ' + batch_size() + ', magin: ' + margin() + ', lamb: ' + lamb() + ', nns: ' + negative_sample_no()
+            if select_model() not in ['TransE', 'TransD', 'TransH']:
+                temp_str = 'lf: ' + loss_function() + ', ns: ' + negative_sampling() + ', b: ' + para_list[p_index][
+                            0] + ', lr: ' + para_list[p_index][1] + ', bs: ' + para_list[p_index][2] + ', lamb: ' + \
+                           para_list[p_index][4] + ', nns: ' + para_list[p_index][3]
+            else:
+                temp_str = 'lf: ' + loss_function() + ', ns: ' + negative_sampling() + ', b: ' + para_list[p_index][0] + \
+                           ', lr: ' + para_list[p_index][1] + ', bs: ' + para_list[p_index][2] + ', magin: ' + para_list[p_index][
+                               4] + ', nns: ' + para_list[p_index][3]
+            # temp_str = 'lf: ' + loss_function() + ', ns: ' + negative_sampling() + ', b: ' + para_list[index][0] + ', lr: ' \
+            #            + para_list[index][1] + ', bs: ' + para_list[index][2] + ', magin: ' + para_list[index][4] + ', lamb: ' \
+            #            + lamb() + ', nns: ' + para_list[index][3]
             best_perfor = "mrr: %.2f, mr: %.2f, test1: %.2f, test3: %.2f, test10: %.2f" % (
             graph_data[0], graph_data[1], graph_data[2], graph_data[3], graph_data[4])
             #
             new_data = {"Index": graph_data[0], "Time": total_time, "Hyper_Params": temp_str,
                         "Best_Perfor": best_perfor}
+            float_treeview_list.append(new_data)
 
             file_path = args.task_dir + '/' + select_model() + '.json'
             if not os.path.exists(file_path):
@@ -1117,14 +1233,21 @@ def visualisation_window():
                 json.dump(jsondata, f_new)
                 print('insert')
             f_new.close()
-            show_graph()
+            if p_index+1 == len(para_list):
+                TrainingButton.configure(state='normal')
+                show_graph()
+                print('22222')
+            # else:
+            #     messagebox.showerror('Warning', "An error occurred, please restart the application!")
+
 
         def train():
             # print_config()
             # graph_data, total_time = start_training()
             # T = threading.Thread(target=_train)
-            T = threading.Thread(target=_train())
-            T.start()
+            T2 = threading.Thread(target=_train)
+            T2.setDaemon(True)
+            T2.start()
             # set_data(graph_data)
             # temp_str = 'lf: ' + loss_function() + ', ns: ' + negative_sampling() + ', b: ' + bernoulli() + ', lr: ' \
             #            + learning_rate() + ', bs: ' + batch_size() + ', magin: ' + margin() + ', lamb: ' + lamb() + ', nns: ' + negative_sample_no()
@@ -1183,66 +1306,71 @@ def visualisation_window():
             # show_graph()
 
         def show_graph():
+            # global image_label
             received_list = list(check_box_list.state())
-            x_labels = []
-            for i in range(len(received_list)):
-                if received_list[i] == 1:
-                    x_labels.append(select_Model[i])
-            print('received_list: ', received_list)
-            print('x_labels: ', x_labels)
-            chart_data_1 = []
-            chart_data_2 = []
-            chart_data_3 = []
-            chart_data_4 = []
-            chart_data_5 = []
+            if 1 in received_list:
+                image_label.pack()
+                x_labels = []
+                for i in range(len(received_list)):
+                    if received_list[i] == 1:
+                        x_labels.append(select_Model[i])
+                print('received_list: ', received_list)
+                print('x_labels: ', x_labels)
+                chart_data_1 = []
+                chart_data_2 = []
+                chart_data_3 = []
+                chart_data_4 = []
+                chart_data_5 = []
 
-            print(graph_data_1)
-            for m in x_labels:
-                with open('mrr.json') as f:
-                    json_data = json.load(f)
-                chart_data_1.append(json_data[0][m])
-                chart_data_2.append(json_data[1][m])
-                chart_data_3.append(json_data[2][m])
-                chart_data_4.append(json_data[3][m])
-                chart_data_5.append(json_data[4][m])
-            fig1 = plt.figure(dpi=240, figsize=(12, 8))
+                print(graph_data_1)
+                for m in x_labels:
+                    with open('mrr.json') as f:
+                        json_data = json.load(f)
+                    chart_data_1.append(json_data[0][m])
+                    chart_data_2.append(json_data[1][m])
+                    chart_data_3.append(json_data[2][m])
+                    chart_data_4.append(json_data[3][m])
+                    chart_data_5.append(json_data[4][m])
+                fig1 = plt.figure(dpi=240, figsize=(12, 8))
 
-            plt.subplot(321)
-            plt.bar(x_labels, chart_data_1, width=0.4, color='steelblue')
-            plt.xlim(-1, len(select_Model))
-            for a, b in zip(x_labels, chart_data_1):
-                plt.text(a, b, '%.4f' % b, ha='center', va='bottom', fontsize=10)
-            plt.ylabel('MRR')
-            plt.subplot(322)
-            plt.bar(x_labels, chart_data_2, width=0.4, color='steelblue')
-            plt.xlim(-1, len(select_Model))
-            for a, b in zip(x_labels, chart_data_2):
-                plt.text(a, b, '%.4f' % b, ha='center', va='bottom', fontsize=10)
-            plt.ylabel('MR')
-            plt.subplot(323)
-            plt.bar(x_labels, chart_data_3, width=0.4, color='steelblue')
-            plt.xlim(-1, len(select_Model))
-            for a, b in zip(x_labels, chart_data_3):
-                plt.text(a, b, '%.4f' % b, ha='center', va='bottom', fontsize=10)
-            plt.ylabel('Test_1')
-            plt.subplot(324)
-            plt.bar(x_labels, chart_data_4, width=0.4, color='steelblue')
-            plt.xlim(-1, len(select_Model))
-            for a, b in zip(x_labels, chart_data_4):
-                plt.text(a, b, '%.4f' % b, ha='center', va='bottom', fontsize=10)
-            plt.ylabel('Test_3')
-            plt.subplot(325)
-            plt.bar(x_labels, chart_data_5, width=0.4, color='steelblue')
-            plt.xlim(-1, len(select_Model))
-            for a, b in zip(x_labels, chart_data_5):
-                plt.text(a, b, '%.4f' % b, ha='center', va='bottom', fontsize=10)
-            plt.ylabel('Test_10')
-            plt.tight_layout()
-            save_path = 'training_result_image/tr_image.png'
-            plt.savefig(save_path, bbox_inches='tight', dpi=240)  # remove whitespace around
-
-            create_result_view()
-            print('show 5 graph')
+                plt.subplot(321)
+                plt.bar(x_labels, chart_data_1, width=0.4, color='steelblue')
+                plt.xlim(-1, len(select_Model))
+                for a, b in zip(x_labels, chart_data_1):
+                    plt.text(a, b, '%.4f' % b, ha='center', va='bottom', fontsize=10)
+                plt.ylabel('MRR')
+                plt.subplot(322)
+                plt.bar(x_labels, chart_data_2, width=0.4, color='steelblue')
+                plt.xlim(-1, len(select_Model))
+                for a, b in zip(x_labels, chart_data_2):
+                    plt.text(a, b, '%.4f' % b, ha='center', va='bottom', fontsize=10)
+                plt.ylabel('MR')
+                plt.subplot(323)
+                plt.bar(x_labels, chart_data_3, width=0.4, color='steelblue')
+                plt.xlim(-1, len(select_Model))
+                for a, b in zip(x_labels, chart_data_3):
+                    plt.text(a, b, '%.4f' % b, ha='center', va='bottom', fontsize=10)
+                plt.ylabel('Test_1')
+                plt.subplot(324)
+                plt.bar(x_labels, chart_data_4, width=0.4, color='steelblue')
+                plt.xlim(-1, len(select_Model))
+                for a, b in zip(x_labels, chart_data_4):
+                    plt.text(a, b, '%.4f' % b, ha='center', va='bottom', fontsize=10)
+                plt.ylabel('Test_3')
+                plt.subplot(325)
+                plt.bar(x_labels, chart_data_5, width=0.4, color='steelblue')
+                plt.xlim(-1, len(select_Model))
+                for a, b in zip(x_labels, chart_data_5):
+                    plt.text(a, b, '%.4f' % b, ha='center', va='bottom', fontsize=10)
+                plt.ylabel('Test_10')
+                plt.tight_layout()
+                save_path = 'training_result_image/tr_image.png'
+                plt.savefig(save_path, bbox_inches='tight', dpi=240)  # remove whitespace around
+                print('33333')
+                create_result_view()
+                print('show 5 graph')
+            else:
+                image_label.pack_forget()
 
         def create_result_view():
             global result_text_view, result_image, im, image_label1
@@ -1251,9 +1379,10 @@ def visualisation_window():
             result_image = Image.open('training_result_image/tr_image.png')
             im = ImageTk.PhotoImage(result_image.resize((1300, 640), Image.ANTIALIAS))
             image_label.configure(image=im)
+            print('44444')
 
         TrainingButton = tk.Button(optionsFrame, text="Begin Training", font=f1,
-                                   command=lambda: train())
+                                   command=lambda: _get_parameters_list())
         TrainingButton.place(x=1230, y=140, width=200, height=50)
 
         def all_change(event):
@@ -1336,7 +1465,7 @@ def visualisation_window():
         # style_value.configure("Treeview", rowheight=60, font=f1)
         # style_value.configure("Treeview.Heading", rowheight=60, font=f1)
 
-        # 右边滚动条
+        # right scrollbar
         h_r_scroll_bar = Scrollbar(historyFrame)
         h_r_scroll_bar.pack(side=RIGHT, fill=Y)
 
@@ -1364,6 +1493,9 @@ def visualisation_window():
         style_value = ttk.Style()
         style_value.configure("Treeview", rowheight=50, font=f1)
 
+        cate_tree_view.tag_configure('oddrow', background='white')
+        cate_tree_view.tag_configure('evenrow', background='lightblue')
+        # temp_ = cate_tree_view.insert('', END, text='2022-09-19', open=True)
         def delButton(tree):
             x = tree.get_children()
             for item in x:
@@ -1372,22 +1504,36 @@ def visualisation_window():
         def show_trace_table():
             delButton(cate_tree_view)
             print(data_folder_path)
+            global count
+            count = 0
             # file_path = args.task_dir + '/' + selectKGE() + '.json'
             file_path = './KG_Data/' + selectKG() + '/' + selectKGE() + '.json'
             if os.path.exists(file_path):
                 with open(file_path, 'r') as f:
                     json_data = json.load(f)
                     for jd in json_data:
-                        # print(jd)
-                        cate_tree_view.insert('', index=4, values=(
-                            jd['Time'], jd['Hyper_Params'], jd['Best_Perfor']
-                        ))
+                        if count % 2 == 0:
+                            cate_tree_view.insert('', index=4, values=(
+                                jd['Time'], jd['Hyper_Params'], jd['Best_Perfor']
+                            ), tags='evenrow')
+                        else:
+                            cate_tree_view.insert('', index=4, values=(
+                                jd['Time'], jd['Hyper_Params'], jd['Best_Perfor']
+                            ), tags='oddrow')
+                        count += 1
                 f.close()
             else:
                 messagebox.showerror('Warning', "File does not exist or file is empty!")
 
+        def delete_history():
+            selected_history = cate_tree_view.selection()
+            for item in selected_history:
+                cate_tree_view.delete(item)
+
         show_Button = tk.Button(historyFrame, text="Update Table", font=f0, command=lambda: show_trace_table())
         show_Button.pack(side=LEFT)
+        delete_Button = tk.Button(historyFrame, text="Delete History", font=f0, command=lambda: delete_history())
+        delete_Button.pack(padx=20, side=LEFT)
 
     create_history_table()
     update_from_file()

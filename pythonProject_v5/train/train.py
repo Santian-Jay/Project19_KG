@@ -14,7 +14,7 @@ from pythonProject_v5.train import training_graph_data
 parser = argparse.ArgumentParser(description="Parser for Knowledge Graph Embedding")
 parser.add_argument('--task_dir', type=str, default='./KG_Data/dataset', help='the directory to dataset')
 parser.add_argument('--model', type=str, default='ComplEx',  help='scoring function, support [TransE, TransD, TransH, DistMult, ComplEx, SimplE]') # Model
-parser.add_argument('--sample', type=str, default='unif', help='sampling method from the cache')
+parser.add_argument('--sample', type=str, default='bern', help='sampling method from the cache')
 parser.add_argument('--update', type=str, default='IS', help='cache update method')
 parser.add_argument('--remove', type=bool, default=False, help='whether to remove false negative in cache periodically')
 parser.add_argument('--loss', type=str, default='point', help='loss function, pair_loss or  point_loss')  # Loss function
@@ -27,7 +27,7 @@ parser.add_argument('--lamb', type=float, default=0.01, help='set weight decay v
 parser.add_argument('--hidden_dim', type=int, default=100, help='set embedding dimension')
 parser.add_argument('--temp', type=float, default=2.0, help='set temporature value to avoid device trigger')
 parser.add_argument('--gpu', type=str, default='0', help='set gpu #')
-parser.add_argument('--p', type=int, default=1, help='set distance norm')
+parser.add_argument('--p', type=int, default=1, help='set distance norm') # 1
 parser.add_argument('--lr', type=float, default=0.0001, help='set learning rate')  # Learning rate
 parser.add_argument('--n_epoch', type=int, default=1000, help='number of training epochs')  # 1000
 parser.add_argument('--n_batch', type=int, default=4096, help='number of batch size')  # Batch size

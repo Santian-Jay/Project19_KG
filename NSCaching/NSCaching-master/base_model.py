@@ -32,10 +32,9 @@ class BaseModel(object):
         self.weight_decay = args.lamb * args.n_batch / args.n_train
         self.time_tot = 0
         self.args = args
-        self.unique_time = ''
+
 
     def save(self, filename):
-        print('filename: ', filename)
         torch.save(self.model.state_dict(), filename)
 
     def load(self, filename):
@@ -192,7 +191,7 @@ class BaseModel(object):
         n_batch = self.args.n_batch
         best_mrr = 0
         best_str = ''
-        self.unique_time = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
+
         for epoch in range(n_epoch):
             start = time.time()
 
@@ -206,10 +205,7 @@ class BaseModel(object):
             epoch_loss = 0
 
             if self.args.save and epoch==self.args.s_epoch:
-                # temp = self.unique_time + '-' + self.args.model + '.mdl'
-                print('test: ', os.path.join(self.args.task_dir, (self.unique_time + '_' + self.args.model + '.mdl')))
-                self.save(os.path.join(self.args.task_dir, self.unique_time + '_' + self.args.model + '.mdl'))
-                # self.save(self.args.task_dir + "\\" + self.unique_time + '_' + self.args.model + '.mdl')
+                self.save(os.path.join(self.args.task_dir, self.args.model + '.mdl'))
 
             for h, t, r, h_idx, t_idx in batch_by_size(n_batch, head, tail, rela, head_idx, tail_idx, n_sample=n_train):
                 self.model.zero_grad()
@@ -236,12 +232,34 @@ class BaseModel(object):
                 if not (self.args.sample=='bern'):
                     self.update_cache(h, t, r, h_idx, t_idx)
 
-                if self.args.loss == 'point':
-                    p_loss = self.model.point_loss(h, t, r, 1)
-                    n_loss = self.model.point_loss(n_h, n_t, n_r, -1)
-                    loss = p_loss + n_loss
+                if self.args.negative_sampling == "sum":
+                    if self.args.loss == 'point':
+                        p_loss = self.model.point_loss(h, t, r, 1)
+                        n_loss = self.model.point_loss(n_h, n_t, n_r, -1)
+                        loss = p_loss + n_loss
+                    elif self.args.loss == 'sigmoid':
+                        loss = self.model.sigmoid_loss(h, t, r, n_h, n_t, n_r)
+                    else:
+                        loss = self.model.pair_loss(h, t, r, n_h, n_t)
+                elif self.args.negative_sampling == "adv":
+                    if self.args.loss == 'point':
+                        p_loss = self.model.point_loss_adv(h, t, r, 1) # todo
+                        n_loss = self.model.point_loss_adv(n_h, n_t, n_r, -1) # todo
+                        loss = p_loss + n_loss
+                    elif self.args.loss == 'sigmoid':
+                        loss = self.model.sigmoid_loss_adv(h, t, r, n_h, n_t, n_r)
+                    else:
+                        loss = self.model.pair_loss_adv(h, t, r, n_h, n_t) #todo
+                # mean
                 else:
-                    loss = self.model.pair_loss(h, t, r, n_h, n_t)
+                    if self.args.loss == 'point':
+                        p_loss = self.model.point_loss_adv(h, t, r, 1)
+                        n_loss = self.model.point_loss_adv(n_h, n_t, n_r, -1)
+                        loss = p_loss + n_loss/self.args.n_sample
+                    elif self.args.loss == 'sigmoid':
+                        loss = self.model.sigmoid_loss_mean(h, t, r, n_h, n_t, n_r)
+                    else:
+                        loss = self.model.pair_loss_adv(h, t, r, n_h, n_t)/self.args.n_sample
                 
                 loss.backward()
                 self.optimizer.step()
@@ -260,8 +278,8 @@ class BaseModel(object):
                 out_str = '%d\t%.2f\t%.4f %.1f %.4f %.4f %.4f\t%.4f %.1f %.4f %.4f %.4f\n' % (epoch, self.time_tot, \
                         valid_mrr, valid_mr, valid_1, valid_3, valid_10, \
                         test_mrr, test_mr, test_1, test_3, test_10)   #需要的5个数， 根据valid_mrr的大小判断哪个好
-                with open(self.args.perf_file, 'a') as f:
-                    f.write(out_str)
+                # with open(self.args.perf_file, 'a') as f:
+                #     f.write(out_str)
 
                 # remove false negative 
 

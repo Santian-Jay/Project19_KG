@@ -115,11 +115,11 @@ e2 = tk.Entry(root, textvariable=v2)
 v2.set(margin1)
 e2.pack()
 
-t = '2, 4,  6,8, '
+t = '2, 4, 6, 8,'
 h = 'True,False'
-t_list = t.strip().split(', ')
-# t_list.remove('')
-print(t_list)
+# t_list = t.strip().split(', ')
+# # t_list.remove('')
+# print(t_list)
 t_list2 = re.split(', | | ,|,', t)
 # t_list2.remove('')
 t_list2 = list(set(t_list2))

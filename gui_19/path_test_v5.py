@@ -256,4 +256,4 @@ def subgraph_extra(path, start, end, max_n):
         # draw_sub(graphList[g], g)
         print('current subgraph number of nodes: ', nx.number_of_nodes(graphList[g]))
 
-subgraph_extra('./dataset', 4, 5, 6)
+subgraph_extra('./dataset', 0, 1, 6)

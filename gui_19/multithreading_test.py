@@ -560,47 +560,229 @@
 # if __name__ == '__main__':
 #     main()
 
-from tkinter import *
-from threading import Thread
-from time import sleep
-from random import randint
+# from tkinter import *
+# from threading import Thread
+# from time import sleep
+# from random import randint
+#
+# class GUI():
+#
+#     def __init__(self):
+#         self.root = Tk()
+#         self.root.geometry("200x200")
+#
+#         self.btn = Button(self.root,text="lauch")
+#         self.btn.pack(expand=True)
+#
+#         self.btn.config(command=self.action)
+#
+#     def run(self):
+#         self.root.mainloop()
+#
+#     def add(self,string,buffer):
+#         while  self.txt:
+#             msg = str(randint(1,100))+string+"\n"
+#             self.txt.insert(END,msg)
+#             sleep(0.5)
+#
+#     def reset_lbl(self):
+#         self.txt = None
+#         self.second.destroy()
+#
+#     def action(self):
+#         self.second = Toplevel()
+#         self.second.geometry("100x100")
+#         self.txt = Text(self.second)
+#         self.txt.pack(expand=True,fill="both")
+#
+#         self.t = Thread(target=self.add,args=("new",None))
+#         self.t.setDaemon(True)
+#         self.t.start()
+#
+#         self.second.protocol("WM_DELETE_WINDOW",self.reset_lbl)
+#
+# a = GUI()
+# a.run()
 
-class GUI():
 
+# import tkinter as tk
+# from tkinter import ttk
+# from tkinter.messagebox import showerror
+# from threading import Thread
+# import requests
+#
+#
+# class AsyncDownload(Thread):
+#     def __init__(self, url):
+#         super().__init__()
+#
+#         self.html = None
+#         self.url = url
+#
+#     def run(self):
+#         response = requests.get(self.url)
+#         self.html = response.text
+#
+#
+# class App(tk.Tk):
+#     def __init__(self):
+#         super().__init__()
+#
+#         self.title('Webpage Download')
+#         self.geometry('680x430')
+#         self.resizable(0, 0)
+#
+#         self.create_header_frame()
+#         self.create_body_frame()
+#         self.create_footer_frame()
+#
+#     def create_header_frame(self):
+#
+#         self.header = ttk.Frame(self)
+#         # configure the grid
+#         self.header.columnconfigure(0, weight=1)
+#         self.header.columnconfigure(1, weight=10)
+#         self.header.columnconfigure(2, weight=1)
+#         # label
+#         self.label = ttk.Label(self.header, text='URL')
+#         self.label.grid(column=0, row=0, sticky=tk.W)
+#
+#         # entry
+#         self.url_var = tk.StringVar()
+#         self.url_entry = ttk.Entry(self.header,
+#                                    textvariable=self.url_var,
+#                                    width=80)
+#
+#         self.url_entry.grid(column=1, row=0, sticky=tk.EW)
+#
+#         # download button
+#         self.download_button = ttk.Button(self.header, text='Download')
+#         self.download_button['command'] = self.handle_download
+#         self.download_button.grid(column=2, row=0, sticky=tk.E)
+#
+#         # attach the header frame
+#         self.header.grid(column=0, row=0, sticky=tk.NSEW, padx=10, pady=10)
+#
+#     def handle_download(self):
+#         url = self.url_var.get()
+#         if url:
+#             self.download_button['state'] = tk.DISABLED
+#             self.html.delete(1.0, "end")
+#
+#             download_thread = AsyncDownload(url)
+#             download_thread.start()
+#
+#             self.monitor(download_thread)
+#         else:
+#             showerror(title='Error',
+#                       message='Please enter the URL of the webpage.')
+#
+#     def monitor(self, thread):
+#         if thread.is_alive():
+#             # check the thread every 100ms
+#             self.after(100, lambda: self.monitor(thread))
+#         else:
+#             self.html.insert(1.0, thread.html)
+#             self.download_button['state'] = tk.NORMAL
+#
+#     def create_body_frame(self):
+#         self.body = ttk.Frame(self)
+#         # text and scrollbar
+#         self.html = tk.Text(self.body, height=20)
+#         self.html.grid(column=0, row=1)
+#
+#         scrollbar = ttk.Scrollbar(self.body,
+#                                   orient='vertical',
+#                                   command=self.html.yview)
+#
+#         scrollbar.grid(column=1, row=1, sticky=tk.NS)
+#         self.html['yscrollcommand'] = scrollbar.set
+#
+#         # attach the body frame
+#         self.body.grid(column=0, row=1, sticky=tk.NSEW, padx=10, pady=10)
+#
+#     def create_footer_frame(self):
+#         self.footer = ttk.Frame(self)
+#         # configure the grid
+#         self.footer.columnconfigure(0, weight=1)
+#         # exit button
+#         self.exit_button = ttk.Button(self.footer,
+#                                       text='Exit',
+#                                       command=self.destroy)
+#
+#         self.exit_button.grid(column=0, row=0, sticky=tk.E)
+#
+#         # attach the footer frame
+#         self.footer.grid(column=0, row=2, sticky=tk.NSEW, padx=10, pady=10)
+#
+#
+# if __name__ == "__main__":
+#     app = App()
+#     app.mainloop()
+
+
+import tkinter as tk
+#from ttk import *
+import time
+import queue, threading
+from tkinter.ttk import Progressbar
+
+class MainWindow:
     def __init__(self):
-        self.root = Tk()
-        self.root.geometry("200x200")
+        self.root = tk.Tk()
+        self.root.title('Demo')
 
-        self.btn = Button(self.root,text="lauch")
-        self.btn.pack(expand=True)
+    def show(self):
+        self.progress = tk.IntVar()
+        self.progress_max = 100
+        self.progressbar = Progressbar(self.root, mode='determinate', orient=tk.HORIZONTAL, variable=self.progress,
+                                       maximum=self.progress_max)
+        self.progressbar.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+        self.progress.set(0)
 
-        self.btn.config(command=self.action)
+        btn = tk.Button(self.root, text='start', command=self.start)
+        btn.pack(fill=tk.BOTH, expand=True, padx=15, pady=5)
+        self.btn = btn
 
-    def run(self):
         self.root.mainloop()
 
-    def add(self,string,buffer):
-        while  self.txt:
-            msg = str(randint(1,100))+string+"\n"
-            self.txt.insert(END,msg)
-            sleep(0.5)
+    def start(self):
+        self.progress.set(0)
+        self.btn.config(state=tk.DISABLED)
 
-    def reset_lbl(self):
-        self.txt = None
-        self.second.destroy()
+        self.thread_queue = queue.Queue()  # used to communicate between main thread (UI) and worker thread
+        new_thread = threading.Thread(target=self.run_loop, kwargs={'param1': 100, 'param2': 20})
+        new_thread.start()
 
-    def action(self):
-        self.second = Toplevel()
-        self.second.geometry("100x100")
-        self.txt = Text(self.second)
-        self.txt.pack(expand=True,fill="both")
+        # schedule a time-task to check UI
+        # it's in main thread, because it's called by self.root
+        self.root.after(100, self.listen_for_result)
 
-        self.t = Thread(target=self.add,args=("new",None))
-        self.t.setDaemon(True)
-        self.t.start()
+    def run_loop(self, param1, param2):
+        progress = 0
+        for entry in range(self.progress_max):
+            time.sleep(0.1)
+            progress = progress + 1
+            self.thread_queue.put(progress)
 
-        self.second.protocol("WM_DELETE_WINDOW",self.reset_lbl)
+    def listen_for_result(self):
+        '''
+        Check if there is something in the queue.
+        Must be invoked by self.root to be sure it's running in main thread
+        '''
+        try:
+            progress = self.thread_queue.get(False)
+            self.progress.set(progress)
+        except queue.Empty:  # must exist to avoid trace-back
+            pass
+        finally:
+            if self.progress.get() < self.progressbar['maximum']:
+                self.root.after(100, self.listen_for_result)
+            else:
+                self.btn.config(state=tk.NORMAL)
 
-a = GUI()
-a.run()
+
+if __name__ == '__main__':
+    win = MainWindow()
+    win.show()
 

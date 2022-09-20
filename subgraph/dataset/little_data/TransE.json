@@ -1,4 +1,0 @@
-[
-  {"Index": 0.3636, "Time": "2022-08-16_10:27:30", "Hyper_Params": "lf: pair, ns: Bernoulli, b: True, lr: 0.1, bs: 512, magin: 0, lamb: 0.1, nns: 1", "Best_Perfor": "mrr: 0.36, mr: 5.50, test1: 0.20, test3: 0.40, test10: 0.90"},
-  {"Index": 0.365, "Time": "2022-08-16 10:23:06", "Hyper_Params": "lf: pair, ns: Bernoulli, b: True, lr: 0.1, bs: 512, magin: 0, lamb: 0.1, nns: 1", "Best_Perfor": "mrr: 0.36, mr: 6.90, test1: 0.20, test3: 0.40, test10: 0.60"},
-  {"Index": 0.4408, "Time": "2022-08-16_10:35:41", "Hyper_Params": "lf: pair, ns: Bernoulli, b: True, lr: 0.1, bs: 512, magin: 0, lamb: 0.1, nns: 1", "Best_Perfor": "mrr: 0.44, mr: 5.90, test1: 0.30, test3: 0.50, test10: 0.70"}]

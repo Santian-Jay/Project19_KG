@@ -2,9 +2,6 @@ from subgraph import *
 import networkx as nx
 import os
 from matplotlib import pyplot as plt
-import scipy as sp
-import scipy.sparse
-from networkx import from_scipy_sparse_matrix
 
 def incidence_matrix_weight1(adj_list):
     '''
@@ -165,15 +162,8 @@ def draw_graph(graph, id2entity, id2relation, index):
     old_edge_labels = nx.get_edge_attributes(graph, 'weight')
 
     edge_labels = {}
-    # for k, v in old_edge_labels.items():
-    #     edge_labels[(k[0], k[1])] = id2relation[int(v)]
     for k, v in old_edge_labels.items():
-        # print('k,v: ', k, v)
-        if (k[0], k[1]) not in edge_labels:
-            edge_labels[(k[0], k[1])] = id2relation[int(v)]
-        else:
-            edge_labels[(k[0], k[1])] = edge_labels[(k[0], k[1])] + '/' + id2relation[int(v)]
-            # print('attrs: ', edge_labels)
+        edge_labels[(k[0], k[1])] = id2relation[int(v)]
 
     node_labels = {}
     for n in graph.nodes():
@@ -187,36 +177,20 @@ def draw_graph(graph, id2entity, id2relation, index):
     # edge
     nx.draw_networkx_edges(graph, pos)
     nx.draw_networkx_edge_labels(graph, pos, edge_labels=edge_labels)
-
-    # print duplicate edges
-    ax = plt.gca()
-    for e in graph.edges:
-        ax.annotate("",
-                    xy=pos[e[0]], xycoords='data',
-                    xytext=pos[e[1]], textcoords='data',
-                    arrowprops=dict(arrowstyle="-", color="0.5",
-                                    shrinkA=5, shrinkB=5,
-                                    patchA=None, patchB=None,
-                                    connectionstyle="arc3, rad=rrr".replace('rrr', str(0.3*e[2])
-                                                                            ),
-                                    ),
-                    )
     plt.axis('off')
     save_path = f"subgraph_images/pic-{index+1}.png"
     plt.savefig(save_path)
 
 if __name__ == '__main__':
-    task_dir = './dataset/little_data'
-    # centers = ['Nitin_Saxena', 'Peace_Prize_of_the_German_Book_Trade']
-    # relations = [
-    #     'isConnectedTo', 'isKnownFor', 'graduatedFrom', 'hasChild',
-    #     'actedIn', 'exports', 'isLocatedIn', 'wroteMusicFor', 'hasCurrency',
-    #     'playsFor', 'directed', 'owns', 'isPoliticianOf', 'diedIn', 'hasGender',
-    #     'edited', 'isInterestedIn', 'created', 'livesIn', 'dealsWith',
-    #     'hasOfficialLanguage', 'isMarriedTo', 'hasMusicalRole'
-    #     ]
-    centers = ['Denmark', 'Harthacnut']
-    relations = ['KingOf', 'WifeOf', 'SiblingOf', 'QueenOf', 'GrandparentOf', 'HusbandOf', 'SuceededBy', 'SucceededBy', 'ParentOf']
+    task_dir = './dataset/YAGO3-10'
+    centers = ['Nitin_Saxena', 'Peace_Prize_of_the_German_Book_Trade']
+    relations = [
+        'isConnectedTo', 'isKnownFor', 'graduatedFrom', 'hasChild', 
+        'actedIn', 'exports', 'isLocatedIn', 'wroteMusicFor', 'hasCurrency', 
+        'playsFor', 'directed', 'owns', 'isPoliticianOf', 'diedIn', 'hasGender', 
+        'edited', 'isInterestedIn', 'created', 'livesIn', 'dealsWith', 
+        'hasOfficialLanguage', 'isMarriedTo', 'hasMusicalRole'
+        ]
     hop = 3
 
     id2relation = get_id2relation(os.path.join(task_dir,'relation2id.txt'))
@@ -231,9 +205,9 @@ if __name__ == '__main__':
     nodes2sub_nodes = dict([(sub_nodes[i], i) for i in range(len(sub_nodes))])
     id2entity_sub = dict([(i, id2entity[sub_nodes[i]]) for i in range(len(sub_nodes))])
     entity2id_sub = dict([(v,k) for k,v in id2entity_sub.items()])
-
+    print(f"sub nodes number: {len(sub_nodes)}")
     graph = nx.from_scipy_sparse_matrix(adj)
-    centers_graphs = get_muticenter(graph, adj_weight_list, [nodes2sub_nodes[node] for node in centers_id], 5)
+    centers_graphs = get_muticenter(graph, adj_weight_list, [nodes2sub_nodes[node] for node in centers_id], 2)
     for i in range(len(centers_graphs)):
         sub_graph = breadFirstGraphExtract(graph, centers_graphs[i], adj_weight_list, relations_id, 3, 10)
         draw_graph(sub_graph, id2entity_sub, id2relation, i)

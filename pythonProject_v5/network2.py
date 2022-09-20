@@ -5,7 +5,10 @@
 
 
 import networkx as nx
+import matplotlib
+matplotlib.use('TKAgg')
 from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
 # In[52]:
 
 

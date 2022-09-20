@@ -2,7 +2,6 @@ import torch
 import torch.nn.functional as F
 import torch.nn as nn
 
-
 class BaseModule(nn.Module):
     def __init__(self, n_ent, n_rel, args):
         super(BaseModule, self).__init__()
@@ -10,6 +9,7 @@ class BaseModule(nn.Module):
         self.p = args.p         # norm
         self.margin = args.margin
         self.temp = args.temp
+        self.args = args
 
     def init_weight(self):
         for param in self.parameters():
@@ -46,21 +46,39 @@ class BaseModule(nn.Module):
         score = torch.sum(softplus(-1*label*score))
         return score
 
-    def sigmoid_loss(self, head,tail, rela, n_head, n_tail):
-        logsigmoid = torch.nn.LogSigmoid().cuda()
-        p_score = self.forward(head, tail, rela)
-        n_score = self.forward(n_head, n_tail, rela.unsqueeze(1))
-        p_score = torch.sum(logsigmoid(p_score))
-        n_score = torch.sum(logsigmoid(-n_score))
-        return - p_score - n_score
+### old version
+    # def sigmoid_loss(self, head,tail, rela, n_head, n_tail):
+    #     logsigmoid = torch.nn.LogSigmoid().cuda()
+    #     p_score = self.forward(head, tail, rela)
+    #     n_score = self.forward(n_head, n_tail, rela.unsqueeze(1))
+    #     p_score = torch.sum(logsigmoid(p_score))
+    #     n_score = torch.sum(logsigmoid(-n_score))
+    #     return - p_score - n_score
 
-    def ce_loss(self, head,tail, rela, n_head, n_tail):
+    def sigmoid_loss(self, head,tail, rela, n_head, n_tail, n_rela):
+        softplus = torch.nn.Softplus().cuda()
+        p_score = self.margin - self.score(head, tail, rela)
+        n_score = self.margin - self.score(n_head, n_tail, n_rela)
+        p_score = torch.sum(softplus(-p_score))
+        n_score = torch.sum(softplus(n_score))
+        return p_score + n_score
 
-        c_score = torch.sum((-1 * self.forward(head, tail, rela)))
-        e_score=  torch.sum(torch.log(torch.exp( self.forward(n_head, n_tail, rela))))
-        return c_score+e_score
+### new loss func ###
+    def sigmoid_loss_adv(self, head,tail, rela, n_head, n_tail, n_rela):
+        softplus = torch.nn.Softplus().cuda() # self.beta missed
+        p_score = self.margin - self.forward(head, tail, rela)
+        n_score = self.margin - self.forward(n_head, n_tail, n_rela)
+        p_score = torch.sum(softplus(-p_score))
+        n_score = torch.sum(self.prob(n_head, n_tail, n_rela).detach() * softplus(n_score))
+        return p_score + n_score
 
-
+    def sigmoid_loss_mean(self, head,tail, rela, n_head, n_tail, n_rela):
+        softplus = torch.nn.Softplus().cuda()
+        p_score = self.margin - self.forward(head, tail, rela)
+        n_score = self.margin - self.forward(n_head, n_tail, n_rela)
+        p_score = torch.sum(softplus(-p_score))
+        n_score = torch.sum(softplus(n_score))
+        return p_score + n_score/self.args.n_sample
 class TransEModule(BaseModule):
     def __init__(self, n_ent, n_rel, args):
         super(TransEModule, self).__init__(n_ent, n_rel, args)

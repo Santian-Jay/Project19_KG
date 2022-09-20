@@ -1,1 +1,1 @@
-{"Models": "TransE", "Bern": "True", "Lr": 0.1, "N_batch": 512, "Loss": "pair", "Ns": "Bernoulli", "N_Ns": 1, "Margin": 2, "Lamb": 0.1}
+{"Models": "TransE", "Bern": "True", "Lr": 0.1, "N_batch": 512, "Loss": "sigmoid", "Ns": "Bernoulli", "N_Ns": 50, "Margin": 8, "Lamb": 0.1}

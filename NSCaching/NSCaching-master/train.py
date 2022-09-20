@@ -11,11 +11,11 @@ from base_model import BaseModel
 
 parser = argparse.ArgumentParser(description="Parser for Knowledge Graph Embedding")
 parser.add_argument('--task_dir', type=str, default='./KG_Data/dataset', help='the directory to dataset')
-parser.add_argument('--model', type=str, default='TransH',  help='scoring function, support [TransE, TransD, TransH, DistMult, ComplEx, SimplE]') # Model
+parser.add_argument('--model', type=str, default='TransE',  help='scoring function, support [TransE, TransD, TransH, DistMult, ComplEx, SimplE]') # Model
 parser.add_argument('--sample', type=str, default='unif', help='sampling method from the cache')
 parser.add_argument('--update', type=str, default='IS', help='cache update method')
 parser.add_argument('--remove', type=bool, default=False, help='whether to remove false negative in cache periodically')
-parser.add_argument('--loss', type=str, default='point', help='loss function, pair_loss or  point_loss')  # Loss function
+parser.add_argument('--loss', type=str, default='sigmoid', help='loss function, pair_loss or  point_loss')  # Loss function
 parser.add_argument('--save', type=bool, default=True, help='whether save model')
 parser.add_argument('--s_epoch', type=int, default=100, help='which epoch should be saved, only work when save=True')
 parser.add_argument('--load', type=bool, default=False, help='whether load from pretrain model')
@@ -31,7 +31,7 @@ parser.add_argument('--n_epoch', type=int, default=1000, help='number of trainin
 parser.add_argument('--n_batch', type=int, default=4096, help='number of batch size')  # Batch size
 parser.add_argument('--N_1', type=int, default=30, help='cache_size')
 parser.add_argument('--N_2', type=int, default=30, help='random subset size')
-parser.add_argument('--n_sample', type=int, default=1, help='number of negative samples')  #N_Ns
+parser.add_argument('--n_sample', type=int, default=500, help='number of negative samples')  #N_Ns
 parser.add_argument('--epoch_per_test', type=int, default=50, help='frequency of testing')
 parser.add_argument('--test_batch_size', type=int, default=50, help='test batch size')
 parser.add_argument('--filter', type=bool, default=True, help='whether do filter in testing')
